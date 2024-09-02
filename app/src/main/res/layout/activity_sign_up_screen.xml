@@ -19,49 +19,47 @@
       tools:ignore="UselessParent">
 
     <ImageView
+        android:id="@+id/logoImage"
         android:layout_width="200sp"
         android:layout_height="200sp"
-        android:id="@+id/logoImage"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/logo" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_account"
         android:fontFamily="@font/poppins_semibold"
-        android:textStyle="bold"
+        android:text="@string/create_account"
+        android:textColor="@color/white"
         android:textSize="20sp"
-        android:textColor="@color/white"/>
+        android:textStyle="bold" />
 
     <EditText
-        android:layout_width="match_parent"
+        android:id="@+id/nickname_input"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_corner"
+        android:fontFamily="@font/poppins_semibold"
         android:hint="@string/enter_nickname"
+        android:inputType="text"
+        android:padding="18dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:fontFamily="@font/poppins_semibold"
-        android:textSize="20sp"
-        android:background="@drawable/rounded_corner"
-        android:padding="18dp"
-        android:inputType="text"
-        android:id="@+id/nickname_input"
-        android:layout_marginTop="16dp"
-        />
-
+        android:textSize="20sp" />
 
 
     <Button
+        android:id="@+id/create_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create"
-        android:backgroundTint="#673AB7"
-        android:fontFamily="@font/poppins_semibold"
-        android:textColor="#FFFFFF"
-        android:padding="14dp"
-        android:textSize="20sp"
+        android:layout_height="50sp"
         android:layout_marginTop="32dp"
-        android:id="@+id/create_btn"/>
+        android:backgroundTint="#DC1010"
+        android:fontFamily="@font/poppins_semibold"
+        android:padding="12sp"
+        android:text="@string/create"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp" />
   </LinearLayout>
 
 </RelativeLayout>
