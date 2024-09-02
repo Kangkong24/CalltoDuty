@@ -6,4 +6,12 @@
     <string name="enter_nickname">Enter Nickname</string>
     <string name="create_account">Create Account</string>
     <string name="create">Create</string>
+    <string name="Play" />
+    <string name="play">Play</string>
+    <string name="option">Option</string>
+    <string name="credits">Credits</string>
+    <string name="logo_desc" />
+    <string name="play_button_desc" />
+    <string name="option_button_desc" />
+    <string name="credit_button_desc" />
 </resources>
