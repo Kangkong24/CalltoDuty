@@ -15,7 +15,8 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:gravity="center"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      tools:ignore="UselessParent">
 
     <ImageView
         android:layout_width="200sp"
@@ -27,16 +28,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:fontFamily="@font/poppins_semibold"
         android:textStyle="bold"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/white"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Nickname"
+        android:hint="@string/enter_nickname"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:fontFamily="@font/poppins_semibold"
