@@ -54,7 +54,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create"
+        android:text="@string/create"
         android:backgroundTint="#673AB7"
         android:fontFamily="@font/poppins_semibold"
         android:textColor="#FFFFFF"

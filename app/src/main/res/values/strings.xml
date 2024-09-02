@@ -5,4 +5,5 @@
     <string name="app_name" />
     <string name="enter_nickname">Enter Nickname</string>
     <string name="create_account">Create Account</string>
+    <string name="create">Create</string>
 </resources>
