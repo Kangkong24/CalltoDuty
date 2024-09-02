@@ -14,14 +14,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:gravity="top"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
             android:text="@string/welcome_to_call_to_duty"
             android:textColor="@color/red"
             android:textSize="20sp" />
@@ -30,17 +32,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
             android:text="@string/a_game_that_simulate_the_interaction_between_a_caller_and_the_dispatcher"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
 
         <ImageView
+            android:id="@+id/logoImage"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:id="@+id/logoImage"
-            android:src="@drawable/logo"/>
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="20dp">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/loading_bar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:text="Loading"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </FrameLayout>
 
 
     </LinearLayout>
