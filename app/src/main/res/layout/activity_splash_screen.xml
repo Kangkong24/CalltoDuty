@@ -44,33 +44,40 @@
             android:layout_height="300dp"
             android:layout_gravity="center"
             android:src="@drawable/logo" />
-
-        <FrameLayout
+        
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:paddingHorizontal="20dp">
+            android:layout_height="match_parent">
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="50"
-                android:progressDrawable="@drawable/loading_bar" />
-
-            <TextView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
-                android:text="Loading"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </FrameLayout>
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:layout_alignParentBottom="true"
+                android:paddingHorizontal="20dp"
+                android:layout_centerHorizontal="true"
+                tools:ignore="UselessParent">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progressDrawable="@drawable/loading_bar" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"
+                    android:text="Loading"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </FrameLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
