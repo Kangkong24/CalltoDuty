@@ -14,4 +14,5 @@
     <string name="play_button_desc" />
     <string name="option_button_desc" />
     <string name="credit_button_desc" />
+    <string name="level">LEVEL</string>
 </resources>

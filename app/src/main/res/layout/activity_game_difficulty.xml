@@ -13,14 +13,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="top|center_horizontal"
+        android:background="@drawable/container_Level"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/difficultyTitle"
-            android:text="Difficulty"
+            android:text="@string/level"
             android:textSize="38sp"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/poppins_semibold"
@@ -28,7 +29,7 @@
 
         <ImageView
             android:id="@+id/easy_btn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="17dp"
             android:src="@drawable/easy_btn"
@@ -36,14 +37,14 @@
 
         <ImageView
             android:id="@+id/medium_btn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:src="@drawable/medium_btn"
             />
 
         <ImageView
             android:id="@+id/hard_btn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginBottom="17dp"
             android:src="@drawable/hard_btn"
