@@ -38,6 +38,7 @@
             android:id="@+id/medium_btn"
             android:layout_width="match_parent"
             android:layout_height="70sp"
+            android:layout_marginTop="17dp"
             android:src="@drawable/medium_btn"
             />
 
@@ -45,7 +46,7 @@
             android:id="@+id/hard_btn"
             android:layout_width="match_parent"
             android:layout_height="70sp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginTop="17dp"
             android:src="@drawable/hard_btn"
             />
 
