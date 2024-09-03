@@ -16,7 +16,15 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/difficultyTitle"
+            android:text="Difficulty"
+            android:textSize="38sp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:textColor="@color/white"/>
 
         <ImageView
             android:id="@+id/easy_btn"
