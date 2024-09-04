@@ -21,8 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/difficultyTitle"
-            android:text="@string/level"
+            android:text="@string/Difficulty"
             android:textSize="38sp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="100dp"
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/white"/>
@@ -31,7 +32,6 @@
             android:id="@+id/easy_btn"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
-            android:layout_marginTop="17dp"
             android:src="@drawable/easy_btn"
             />
 
@@ -39,7 +39,7 @@
             android:id="@+id/medium_btn"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="40dp"
             android:src="@drawable/medium_btn"
             />
 
@@ -47,7 +47,7 @@
             android:id="@+id/hard_btn"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="40dp"
             android:src="@drawable/hard_btn"
             />
 
