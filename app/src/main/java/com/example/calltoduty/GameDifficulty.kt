@@ -1,20 +1,42 @@
 package com.example.calltoduty
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class GameDifficulty : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_game_difficulty)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Find the ImageView buttons
+        val easyButton = findViewById<ImageView>(R.id.easy_btn)
+        val mediumButton = findViewById<ImageView>(R.id.medium_btn)
+        val hardButton = findViewById<ImageView>(R.id.hard_btn)
+
+        // Set click listeners for each button
+        easyButton.setOnClickListener {
+            // Start GameActivity with EASY difficulty
+            startGameWithDifficulty(Difficulty.EASY)
         }
+
+        mediumButton.setOnClickListener {
+            // Start GameActivity with MEDIUM difficulty
+            startGameWithDifficulty(Difficulty.MEDIUM)
+        }
+
+        hardButton.setOnClickListener {
+            // Start GameActivity with HARD difficulty
+            startGameWithDifficulty(Difficulty.HARD)
+        }
+    }
+
+    // Function to start GameActivity with selected difficulty
+    private fun startGameWithDifficulty(difficulty: Difficulty) {
+        val intent = Intent(this, GamePlay::class.java)
+        intent.putExtra("difficulty", difficulty.name) // Pass the difficulty level as a string
+        startActivity(intent)
     }
 }

@@ -2,7 +2,7 @@
 
     <string name="welcome_to_call_to_duty">Welcome to Call to Duty.</string>
     <string name="a_game_that_simulate_the_interaction_between_a_caller_and_the_dispatcher">A game that simulate the interaction between a caller and the dispatcher.</string>
-    <string name="app_name" />
+    <string name="app_name">CalltoDuty</string>
     <string name="enter_nickname">Enter Nickname</string>
     <string name="create_account">Create Account</string>
     <string name="create">Create</string>
