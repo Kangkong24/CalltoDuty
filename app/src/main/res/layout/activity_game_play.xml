@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="43dp"
+        android:layout_marginLeft="25dp"
         android:fontFamily="@font/poppins_semibold"
         android:padding="16dp"
         android:text="INCOMING CALL:"
