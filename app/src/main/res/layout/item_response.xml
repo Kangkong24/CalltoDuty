@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:layout_marginLeft="200dp"
+    android:layout_marginLeft="150dp"
+    android:layout_marginBottom="15dp"
     android:background="@drawable/caller_box">
 
     <TextView
