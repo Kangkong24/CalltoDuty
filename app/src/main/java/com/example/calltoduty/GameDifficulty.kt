@@ -20,16 +20,19 @@ class GameDifficulty : AppCompatActivity() {
         easyButton.setOnClickListener {
             // Start GameActivity with EASY difficulty
             startGameWithDifficulty(Difficulty.EASY)
+            //startScenarioListWithDifficulty(Difficulty.EASY)
         }
 
         mediumButton.setOnClickListener {
             // Start GameActivity with MEDIUM difficulty
             startGameWithDifficulty(Difficulty.MEDIUM)
+            //startScenarioListWithDifficulty(Difficulty.MEDIUM)
         }
 
         hardButton.setOnClickListener {
             // Start GameActivity with HARD difficulty
             startGameWithDifficulty(Difficulty.HARD)
+            //startScenarioListWithDifficulty(Difficulty.HARD)
         }
     }
 

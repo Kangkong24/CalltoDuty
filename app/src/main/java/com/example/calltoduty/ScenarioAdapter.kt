@@ -1,0 +1,34 @@
+package com.example.calltoduty
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+
+class ScenarioAdapter(
+    private val scenarios: List<EmergencyScenario>,
+    private val onScenarioClicked: (EmergencyScenario) -> Unit
+) : RecyclerView.Adapter<ScenarioAdapter.ScenarioViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScenarioViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_scenario, parent, false)
+        return ScenarioViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ScenarioViewHolder, position: Int) {
+        val scenario = scenarios[position]
+        holder.bind(scenario)
+        holder.itemView.setOnClickListener { onScenarioClicked(scenario) }
+    }
+
+    override fun getItemCount() = scenarios.size
+
+    class ScenarioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val scenarioNameTextView: TextView = itemView.findViewById(R.id.scenario_name)
+
+        fun bind(scenario: EmergencyScenario) {
+            scenarioNameTextView.text = scenario.scenarioName
+        }
+    }
+}
