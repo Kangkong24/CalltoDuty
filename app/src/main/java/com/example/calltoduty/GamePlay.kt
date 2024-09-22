@@ -88,6 +88,12 @@ class GamePlay : AppCompatActivity() {
         }
     }
 
+
+
+
+
+
+
     private fun showScenario() {
         chosenEmergencyScenario?.let { scenario ->
             if (currentStep < scenario.steps.size) {
@@ -146,6 +152,7 @@ class GamePlay : AppCompatActivity() {
 
 
 
+
     private fun handleChoice(choice: Int) {
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
@@ -161,33 +168,55 @@ class GamePlay : AppCompatActivity() {
         }
     }
 
+
+
     private fun processChoice(currentDialogue: Dialogue, choice: Int, chosenOptionText: String) {
         if (currentDialogue.correctOption.contains(choice)) {
             score++
             showMessage("Correct! You've handled it well.")
-
         } else {
             wrongChoices++
             showMessage("Incorrect! The correct response was one of: ${currentDialogue.correctOption.map { it + 1 }}")
-
         }
-
 
         // Add the chosen option to the list of previous responses
         previousResponses.add(Pair(false, chosenOptionText))
         responseAdapter.notifyItemInserted(previousResponses.size - 1)
 
+        // If max wrong choices are reached, end the game
         if (wrongChoices >= maxWrongChoices) {
             endGame(success = false)
         } else {
-            currentStep++  // Increment before showing the next scenario
-            if (currentStep < (chosenEmergencyScenario?.steps?.size ?: 0)) {
-                showScenario()  // Show the next step
+            // Move to the next step, but first dynamically update the next message
+            if (currentStep + 1 < (chosenEmergencyScenario?.steps?.size ?: 0)) {
+                val nextStep = currentStep + 1
+
+                // Update the message of the next dialogue step based on the user's choice in the current step
+                chosenEmergencyScenario?.let { scenario ->
+                    val nextDialogue = scenario.steps[nextStep]
+                    val responseMessage = currentDialogue.responseMessages?.get(choice)
+
+                    // Update the message in the next dialogue step dynamically
+                    val updatedMessage = responseMessage ?: nextDialogue.message
+
+                    // Replace the next step's message
+                    chosenEmergencyScenario = scenario.copy(
+                        steps = scenario.steps.toMutableList().apply {
+                            set(nextStep, nextDialogue.copy(message = updatedMessage))
+                        }
+                    )
+                }
+
+                // Increment the current step and show the next scenario
+                currentStep++
+                showScenario()
             } else {
-                endGame(success = true)
+                endGame(success = true) // No more steps, end the game
             }
         }
     }
+
+
 
 
 
