@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DarkBlue"
-    android:gravity="center"
-    android:padding="20dp">
-
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/scenario_recycler_view"
+        android:id="@+id/recyclerViewScenarios"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/container_level"/>
+        android:layout_height="match_parent"/>
+</LinearLayout>
 
-
-</RelativeLayout>

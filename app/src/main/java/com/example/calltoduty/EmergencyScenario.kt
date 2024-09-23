@@ -1,39 +1,97 @@
 package com.example.calltoduty
 
-
+import android.os.Parcel
+import android.os.Parcelable
+import kotlin.collections.mutableListOf
 
 enum class Difficulty{
     EASY, MEDIUM, HARD
 }
 
-
+@Suppress("DEPRECATION")
 data class EmergencyScenario(
+    val difficulty: Difficulty,
+    val scenarioName: String,
+    var steps: MutableList<Dialogue>
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        Difficulty.valueOf(parcel.readString()!!),
+        parcel.readString()!!,
+        mutableListOf<Dialogue>().apply {
+            parcel.readList(this, Dialogue::class.java.classLoader)
+        }
+    )
 
-    val difficulty: Difficulty, // difficulty level
-    val scenarioName: String, // Give each scenario a name
-    val steps: List<Dialogue> // List of Emergencies (steps)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(difficulty.name)
+        parcel.writeString(scenarioName)
+        parcel.writeList(steps)
+    }
 
+    override fun describeContents(): Int = 0
 
-)
+    companion object CREATOR : Parcelable.Creator<EmergencyScenario> {
+        override fun createFromParcel(parcel: Parcel): EmergencyScenario {
+            return EmergencyScenario(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EmergencyScenario?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+@Suppress("DEPRECATION")
 data class Dialogue(
     val message: String,
     val textOptions: List<String>? = null,
     val imageOptions: List<Int>? = null,
-    //val options: List<String>,
     val correctOption: Set<Int>,
     val responseMessages: Map<Int, String>? = null // New field for follow-up messages
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
+        parcel.createStringArrayList(),
+        parcel.createIntArray()?.toList(),
+        mutableSetOf<Int>().apply {
+            val list = mutableListOf<Int>()
+            parcel.readList(list, Int::class.java.classLoader)
+            addAll(list)
+        },
+        mutableMapOf<Int, String>().apply {
+            parcel.readMap(this, Int::class.java.classLoader)
+        }
+    )
 
-    //val hint: String? = null,  // Optional hint
-    //val timeLimit: Int? = null // Optional time limit in seconds
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(message)
+        parcel.writeStringList(textOptions)
+        parcel.writeIntArray(imageOptions?.toIntArray())
+        parcel.writeList(correctOption.toList())
+        parcel.writeMap(responseMessages)
+    }
 
-)
+    override fun describeContents(): Int = 0
+
+    companion object CREATOR : Parcelable.Creator<Dialogue> {
+        override fun createFromParcel(parcel: Parcel): Dialogue {
+            return Dialogue(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Dialogue?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
+
+
 
 // Example dialogue list
 val emergencyScenarios: List<EmergencyScenario> = listOf(
     EmergencyScenario(
         difficulty = Difficulty.EASY,
         scenarioName = "Intruder in the House",
-        steps = listOf(
+        steps = mutableListOf(
             // First Dialogue
             Dialogue(
                 message = "You receive a call from a distressed female voice.",
@@ -87,7 +145,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
     EmergencyScenario(
         difficulty = Difficulty.EASY,
         scenarioName = "Lost Child",
-        steps = listOf(
+        steps = mutableListOf(
             Dialogue(
                 message = "You receive a call from a concerned parent about a missing child.",
                 textOptions = listOf("How old is your child?", "When did they go missing?", "What are they wearing?"),
@@ -140,7 +198,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
     EmergencyScenario(
         difficulty = Difficulty.MEDIUM,
         scenarioName = "House Fire",
-        steps = listOf(
+        steps = mutableListOf(
             Dialogue(
                 message = "You receive a call about a fire breaking out in a house.",
                 textOptions = listOf("Where are you?", "Is anyone inside?", "What caused the fire?"),
@@ -178,6 +236,57 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             )
         )
     ),
+    EmergencyScenario(
+        difficulty = Difficulty.MEDIUM,
+        scenarioName = "Bomb Threat at School",
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call reporting a bomb threat at a local school.",
+                textOptions = listOf("Where is the bomb?", "Who made the threat?", "Is the school being evacuated?"),
+                correctOption = setOf(2),
+                responseMessages = mapOf(
+                    0 to "We don't know the exact location!",
+                    1 to "We received an anonymous call about the bomb.",
+                    2 to "Yes, we're starting to evacuate the students."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Are the authorities informed?", "Where are the students being evacuated?", "How long until the bomb goes off?"),
+                correctOption = setOf(0),
+                responseMessages = mapOf(
+                    0 to "The police and bomb squad are on their way.",
+                    1 to "We’re sending them to the football field.",
+                    2 to "We don’t have a time estimate yet!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Stay calm, help is on the way.", "Clear the nearby area!", "Do you have any details about the bomb?"),
+                correctOption = setOf(2),
+                responseMessages = mapOf(
+                    0 to "We are trying, but people are panicking.",
+                    1 to "We're clearing the area around the school.",
+                    2 to "We think the bomb is in a backpack, but nothing confirmed."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you describe the backpack?", "Has anyone suspicious been spotted?", "How many students are left in the building?"),
+                correctOption = setOf(1),
+                responseMessages = mapOf(
+                    0 to "It's black with a logo, but we're not sure.",
+                    1 to "Someone saw a person in a hoodie drop something and run.",
+                    2 to "We still have about 30 students inside."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(2)
+            )
+        )
+    ),
 
 
 
@@ -185,7 +294,59 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
     EmergencyScenario(
         difficulty = Difficulty.HARD,
         scenarioName = "Bomb Threat at School",
-        steps = listOf(
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call reporting a bomb threat at a local school.",
+                textOptions = listOf("Where is the bomb?", "Who made the threat?", "Is the school being evacuated?"),
+                correctOption = setOf(2),
+                responseMessages = mapOf(
+                    0 to "We don't know the exact location!",
+                    1 to "We received an anonymous call about the bomb.",
+                    2 to "Yes, we're starting to evacuate the students."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Are the authorities informed?", "Where are the students being evacuated?", "How long until the bomb goes off?"),
+                correctOption = setOf(0),
+                responseMessages = mapOf(
+                    0 to "The police and bomb squad are on their way.",
+                    1 to "We’re sending them to the football field.",
+                    2 to "We don’t have a time estimate yet!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Stay calm, help is on the way.", "Clear the nearby area!", "Do you have any details about the bomb?"),
+                correctOption = setOf(2),
+                responseMessages = mapOf(
+                    0 to "We are trying, but people are panicking.",
+                    1 to "We're clearing the area around the school.",
+                    2 to "We think the bomb is in a backpack, but nothing confirmed."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you describe the backpack?", "Has anyone suspicious been spotted?", "How many students are left in the building?"),
+                correctOption = setOf(1),
+                responseMessages = mapOf(
+                    0 to "It's black with a logo, but we're not sure.",
+                    1 to "Someone saw a person in a hoodie drop something and run.",
+                    2 to "We still have about 30 students inside."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(2)
+            )
+        )
+    ),
+
+    EmergencyScenario(
+        difficulty = Difficulty.HARD,
+        scenarioName = "Bomb Threat at School",
+        steps = mutableListOf(
             Dialogue(
                 message = "You receive a call reporting a bomb threat at a local school.",
                 textOptions = listOf("Where is the bomb?", "Who made the threat?", "Is the school being evacuated?"),

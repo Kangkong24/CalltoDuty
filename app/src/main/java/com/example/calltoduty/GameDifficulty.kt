@@ -11,34 +11,30 @@ class GameDifficulty : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_difficulty)
 
-        // Find the ImageView buttons
         val easyButton = findViewById<ImageView>(R.id.easy_btn)
         val mediumButton = findViewById<ImageView>(R.id.medium_btn)
         val hardButton = findViewById<ImageView>(R.id.hard_btn)
 
         // Set click listeners for each button
         easyButton.setOnClickListener {
-            // Start GameActivity with EASY difficulty
-            startGameWithDifficulty(Difficulty.EASY)
-            //startScenarioListWithDifficulty(Difficulty.EASY)
+            // Start ScenarioListActivity with EASY difficulty
+            startScenarioListWithDifficulty(Difficulty.EASY)
         }
 
         mediumButton.setOnClickListener {
-            // Start GameActivity with MEDIUM difficulty
-            startGameWithDifficulty(Difficulty.MEDIUM)
-            //startScenarioListWithDifficulty(Difficulty.MEDIUM)
+            // Start ScenarioListActivity with MEDIUM difficulty
+            startScenarioListWithDifficulty(Difficulty.MEDIUM)
         }
 
         hardButton.setOnClickListener {
-            // Start GameActivity with HARD difficulty
-            startGameWithDifficulty(Difficulty.HARD)
-            //startScenarioListWithDifficulty(Difficulty.HARD)
+            // Start ScenarioListActivity with HARD difficulty
+            startScenarioListWithDifficulty(Difficulty.HARD)
         }
     }
 
-    // Function to start GameActivity with selected difficulty
-    private fun startGameWithDifficulty(difficulty: Difficulty) {
-        val intent = Intent(this, GamePlay::class.java)
+    // Function to start ScenarioListActivity with selected difficulty
+    private fun startScenarioListWithDifficulty(difficulty: Difficulty) {
+        val intent = Intent(this, ScenarioListActivity::class.java)
         intent.putExtra("difficulty", difficulty.name) // Pass the difficulty level as a string
         startActivity(intent)
     }

@@ -11,9 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.random.Random
 
 
+@Suppress("DEPRECATION")
 class GamePlay : AppCompatActivity() {
 
     private lateinit var responseAdapter: ResponseAdapter
@@ -22,9 +22,9 @@ class GamePlay : AppCompatActivity() {
     private lateinit var optionButton2: Button
     private lateinit var optionButton3: Button
 
-    private lateinit var optionImage1 : ImageView
-    private lateinit var optionImage2 : ImageView
-    private lateinit var optionImage3 : ImageView
+    private lateinit var optionImage1: ImageView
+    private lateinit var optionImage2: ImageView
+    private lateinit var optionImage3: ImageView
 
     private var score: Int = 0
     private var wrongChoices: Int = 0
@@ -52,12 +52,13 @@ class GamePlay : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = responseAdapter
 
-        // Retrieve the difficulty from the Intent
-        val difficultyString = intent.getStringExtra("difficulty")
-        val selectedDifficulty = Difficulty.valueOf(difficultyString!!)
+        // Retrieve the selected scenario from the Intent
+        chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario")
 
-        // Start the game with the selected difficulty
-        startGame(selectedDifficulty)
+        // Start the game with the selected scenario
+        chosenEmergencyScenario?.let {
+            startGame(it)
+        }
 
         optionButton1.setOnClickListener { handleChoice(0) }
         optionButton2.setOnClickListener { handleChoice(1) }
@@ -66,33 +67,15 @@ class GamePlay : AppCompatActivity() {
         optionImage1.setOnClickListener { handleChoice(0) }
         optionImage2.setOnClickListener { handleChoice(1) }
         optionImage3.setOnClickListener { handleChoice(2) }
-
     }
 
-    private fun startGame(difficulty: Difficulty) {
+    private fun startGame(scenario: EmergencyScenario) {
         score = 0
         wrongChoices = 0
-
-
-        // Filter the scenarios by the selected difficulty
-        val filteredScenarios = emergencyScenarios.filter { it.difficulty == difficulty }
-
-        if (filteredScenarios.isNotEmpty()) {
-            // Randomly select a scenario from the filtered list
-            chosenEmergencyScenario = filteredScenarios[Random.nextInt(filteredScenarios.size)]
-            currentStep = 0
-            showScenario()
-        } else {
-            showMessage("No emergencies available.")
-            endGame(success = false)
-        }
+        chosenEmergencyScenario = scenario
+        currentStep = 0
+        showScenario()
     }
-
-
-
-
-
-
 
     private fun showScenario() {
         chosenEmergencyScenario?.let { scenario ->
@@ -150,9 +133,6 @@ class GamePlay : AppCompatActivity() {
         optionImage3.visibility = visibility
     }
 
-
-
-
     private fun handleChoice(choice: Int) {
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
@@ -168,9 +148,14 @@ class GamePlay : AppCompatActivity() {
         }
     }
 
-
-
     private fun processChoice(currentDialogue: Dialogue, choice: Int, chosenOptionText: String) {
+        // Get the response message based on the user's choice
+        //val responseMessage = currentDialogue.responseMessages?.get(choice) ?: "Invalid choice"
+
+        // Add the response message to the list of previous responses
+        previousResponses.add(Pair(false, chosenOptionText))
+        responseAdapter.notifyItemInserted(previousResponses.size - 1)
+
         if (currentDialogue.correctOption.contains(choice)) {
             score++
             showMessage("Correct! You've handled it well.")
@@ -179,40 +164,31 @@ class GamePlay : AppCompatActivity() {
             showMessage("Incorrect! The correct response was one of: ${currentDialogue.correctOption.map { it + 1 }}")
         }
 
-        // Add the chosen option to the list of previous responses
-        previousResponses.add(Pair(false, chosenOptionText))
-        responseAdapter.notifyItemInserted(previousResponses.size - 1)
-
-        // If max wrong choices are reached, end the game
         if (wrongChoices >= maxWrongChoices) {
             endGame(success = false)
         } else {
-            // Move to the next step, but first dynamically update the next message
-            if (currentStep + 1 < (chosenEmergencyScenario?.steps?.size ?: 0)) {
-                val nextStep = currentStep + 1
-
-                // Update the message of the next dialogue step based on the user's choice in the current step
-                chosenEmergencyScenario?.let { scenario ->
-                    val nextDialogue = scenario.steps[nextStep]
+            currentStep++  // Increment before showing the next scenario
+            if (currentStep < (chosenEmergencyScenario?.steps?.size ?: 0)) {
+                // Get the next step dialogue
+                chosenEmergencyScenario?.steps?.getOrNull(currentStep)?.let { nextDialogue ->
+                    // Get the response message for the current choice, fallback to the original nextDialogue message
                     val responseMessage = currentDialogue.responseMessages?.get(choice)
-
-                    // Update the message in the next dialogue step dynamically
                     val updatedMessage = responseMessage ?: nextDialogue.message
 
-                    // Replace the next step's message
-                    chosenEmergencyScenario = scenario.copy(
-                        steps = scenario.steps.toMutableList().apply {
-                            set(nextStep, nextDialogue.copy(message = updatedMessage))
-                        }
-                    )
-                }
+                    // Update the next dialogue with the response message
+                    val updatedDialogue = nextDialogue.copy(message = updatedMessage)
 
-                // Increment the current step and show the next scenario
-                currentStep++
-                showScenario()
+                    // Replace the step in the list with the updated dialogue
+                    chosenEmergencyScenario?.steps =
+                        chosenEmergencyScenario!!.steps.toMutableList().apply {
+                            set(currentStep, updatedDialogue)
+                        }
+                }
+                showScenario()  // Show the next step
             } else {
-                endGame(success = true) // No more steps, end the game
+                endGame(success = true)
             }
+
         }
     }
 
