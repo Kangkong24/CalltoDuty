@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/DarkBlue"
+    android:background="@drawable/splashscreen_bg"
     android:fontFamily="@font/poppins_semibold"
     android:gravity="center"
     android:padding="20dp"
@@ -17,26 +17,6 @@
         android:gravity="top"
         android:orientation="vertical"
         android:paddingTop="50dp">
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:text="@string/welcome_to_call_to_duty"
-            android:textColor="@color/red"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:text="@string/a_game_that_simulate_the_interaction_between_a_caller_and_the_dispatcher"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
 
         <ImageView
             android:id="@+id/logoImage"

@@ -28,7 +28,7 @@ class GamePlay : AppCompatActivity() {
 
     private var score: Int = 0
     private var wrongChoices: Int = 0
-    private val maxWrongChoices = 3
+    private val maxWrongChoices = 4
 
     private val previousResponses: MutableList<Pair<Boolean, String>> = mutableListOf()
 
