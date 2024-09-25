@@ -1,58 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DarkBlue"
+    android:orientation="vertical"
     tools:context=".GamePlay">
 
     <TextView
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="43dp"
-        android:layout_marginLeft="25dp"
         android:fontFamily="@font/poppins_semibold"
         android:padding="16dp"
-        android:text="INCOMING CALL:"
+        android:text="@string/incoming_call"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
-    <ScrollView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/header"
-        android:layout_above="@id/button_layout"
-        android:layout_margin="16dp"
+        android:layout_height="300dp"
+        android:layout_margin="10dp"
         android:background="@drawable/dia_box"
-        android:padding="16dp"
-        android:fillViewport="true">
+        android:padding="10dp" />
 
-        <LinearLayout
-            android:id="@+id/dialogue_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
-        </LinearLayout>
-    </ScrollView>
-
+    <!-- Button Layout -->
     <LinearLayout
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp">
+        android:layout_margin="20dp">
 
         <Button
             android:id="@+id/optionButton1"
@@ -60,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="option1"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/rounded_corner"/>
 
         <Button
@@ -70,7 +51,7 @@
             android:text="option2"
             android:background="@drawable/rounded_corner"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="3dp"/>
 
         <Button
             android:id="@+id/optionButton3"
@@ -79,7 +60,7 @@
             android:text="option3"
             android:background="@drawable/rounded_corner"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="3dp" />
 
         <ImageView
             android:id="@+id/optionImage1"
@@ -107,4 +88,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

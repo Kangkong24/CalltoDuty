@@ -85,6 +85,9 @@ class GamePlay : AppCompatActivity() {
                 // Add the scenario message to the list of previous responses
                 previousResponses.add(Pair(true, currentDialogue.message))
                 responseAdapter.notifyItemInserted(previousResponses.size - 1)
+                recyclerView.post {
+                    recyclerView.scrollToPosition(previousResponses.size - 1)
+                }
 
                 // Check if this step uses text or image options
                 currentDialogue.textOptions?.let { textOptions ->

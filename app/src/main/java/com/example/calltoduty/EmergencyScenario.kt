@@ -362,8 +362,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
     ),
 
 
-
-            //Medium Difficulty d2
+    //Medium Difficulty d2
     EmergencyScenario(
         difficulty = Difficulty.MEDIUM,
         scenarioName = "House Fire",
