@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_margin="18dp">
 
         <Button
             android:id="@+id/optionButton1"
@@ -65,26 +65,26 @@
         <ImageView
             android:id="@+id/optionImage1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="85dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/optionImage2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="85dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/optionImage3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="9dp"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
