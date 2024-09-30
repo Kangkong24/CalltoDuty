@@ -16,7 +16,8 @@
         android:padding="16dp"
         android:text="@string/incoming_call"
         android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:layout_marginTop="15dp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView

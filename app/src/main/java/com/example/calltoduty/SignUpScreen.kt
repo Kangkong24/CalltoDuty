@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,6 +31,7 @@ class SignUpScreen : AppCompatActivity() {
 
     private lateinit var nickNameInput: EditText
     private lateinit var createBtn: Button
+    private lateinit var loginBtn: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class SignUpScreen : AppCompatActivity() {
 
         nickNameInput = findViewById(R.id.nickname_input)
         createBtn = findViewById(R.id.create_btn)
+        loginBtn = findViewById(R.id.already_tv)
 
         createBtn.setOnClickListener {
             val nickname = nickNameInput.text.toString()
@@ -46,6 +49,12 @@ class SignUpScreen : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show()
             }
+        }
+        //temporary
+        loginBtn.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

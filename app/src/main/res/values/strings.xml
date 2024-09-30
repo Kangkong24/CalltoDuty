@@ -16,4 +16,5 @@
     <string name="credit_button_desc" />
     <string name="Difficulty">DIFFICULTY</string>
     <string name="incoming_call">INCOMING CALL:</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>

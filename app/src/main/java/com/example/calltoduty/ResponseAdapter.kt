@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.os.Handler
+import android.os.Looper
 
 class ResponseAdapter(private val responses: MutableList<Pair<Boolean, String>>) :
     RecyclerView.Adapter<ResponseAdapter.ResponseViewHolder>() {
@@ -17,7 +19,11 @@ class ResponseAdapter(private val responses: MutableList<Pair<Boolean, String>>)
 
     override fun onBindViewHolder(holder: ResponseViewHolder, position: Int) {
         val response = responses[position].second
-        holder.responseText.text = response
+        if (getItemViewType(position) == VIEW_TYPE_MESSAGE) {
+            holder.animateText(response) // Animate the message
+        } else {
+            holder.responseText.text = response // Instantly display the response
+        }
     }
 
     override fun getItemCount() = responses.size
@@ -28,6 +34,23 @@ class ResponseAdapter(private val responses: MutableList<Pair<Boolean, String>>)
 
     inner class ResponseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val responseText: TextView = itemView.findViewById(R.id.response_text)
+
+        fun animateText(text: String) {
+            val handler = Handler(Looper.getMainLooper())
+            responseText.text = ""
+            var index = 0
+
+            val runnable = object : Runnable {
+                override fun run() {
+                    if (index < text.length) {
+                        responseText.append(text[index].toString())
+                        index++
+                        handler.postDelayed(this, 60) //Delay of the message
+                    }
+                }
+            }
+            handler.post(runnable)
+        }
     }
 
     companion object {
