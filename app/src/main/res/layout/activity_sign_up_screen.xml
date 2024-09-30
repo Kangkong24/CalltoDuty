@@ -60,6 +60,17 @@
         android:text="@string/create"
         android:textColor="#FFFFFF"
         android:textSize="12sp" />
+
+
+    <TextView
+        android:id="@+id/already_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="Already have an account?"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/white"
+        android:layout_marginTop="32dp"/>
+
   </LinearLayout>
 
 </RelativeLayout>
