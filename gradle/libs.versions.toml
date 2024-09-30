@@ -1,4 +1,5 @@
 [versions]
+retrofit = "2.9.0"
 agp = "8.5.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -12,6 +13,8 @@ constraintlayout = "2.1.4"
 androidx-recyclerview = "1.2.1"
 
 [libraries]
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
