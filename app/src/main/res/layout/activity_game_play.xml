@@ -43,14 +43,14 @@
             android:text="option1"
             android:textColor="#FFFFFF"
             android:layout_marginTop="30dp"
-            android:background="@drawable/rounded_corner"/>
+            android:background="@drawable/red_rounded_corner"/>
 
         <Button
             android:id="@+id/optionButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="option2"
-            android:background="@drawable/rounded_corner"
+            android:background="@drawable/red_rounded_corner"
             android:textColor="#FFFFFF"
             android:layout_marginTop="3dp"/>
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="option3"
-            android:background="@drawable/rounded_corner"
+            android:background="@drawable/red_rounded_corner"
             android:textColor="#FFFFFF"
             android:layout_marginTop="3dp" />
 
