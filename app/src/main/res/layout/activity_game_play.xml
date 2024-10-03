@@ -39,7 +39,7 @@
         <Button
             android:id="@+id/optionButton1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="option1"
             android:textColor="#FFFFFF"
             android:layout_marginTop="30dp"
@@ -48,7 +48,7 @@
         <Button
             android:id="@+id/optionButton2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="option2"
             android:background="@drawable/red_rounded_corner"
             android:textColor="#FFFFFF"
@@ -57,11 +57,11 @@
         <Button
             android:id="@+id/optionButton3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="option3"
             android:background="@drawable/red_rounded_corner"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="3dp" />
+            android:layout_marginTop="4dp" />
 
         <ImageView
             android:id="@+id/optionImage1"

@@ -12,4 +12,6 @@
     <color name="red">#E70505</color>
     <color name="smth_blue">#0F6DDC</color>
     <color name="green">#38D700</color>
+    <color name="transparent">#00000000</color>
+
 </resources>

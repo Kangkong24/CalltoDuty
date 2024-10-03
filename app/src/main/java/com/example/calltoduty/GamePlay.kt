@@ -203,20 +203,17 @@ class GamePlay : AppCompatActivity() {
         // Display the message in  UI, e.g., in a TextView
     }
 
+
     private fun endGame(success: Boolean) {
         if (success) {
             showMessage("You successfully helped the caller. Your score: $score")
-            startActivity(Intent(this, SuccessActivity::class.java))
+            val successFragment = SuccessFragment.newInstance("param1", "param2")
+            successFragment.show(supportFragmentManager, "successFragment")
         } else {
-            startActivity(Intent(this, FailureActivity::class.java))
             showMessage("Game over - Too many wrong responses. Your score: $score")
-        }
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+            val failedFragment = FailedFragment.newInstance("param1", "param2")
+            failedFragment.show(supportFragmentManager, "failedFragment")
         }
     }
+
 }
