@@ -17,6 +17,8 @@
     <string name="Difficulty">DIFFICULTY</string>
     <string name="incoming_call">INCOMING CALL:</string>
     <string name="already_have_an_account">Already have an account?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fail_image_desc" />
+    <string name="close_button_desc" />
+    <string name="success_image_desc" />
+    <string name="next_button_desc" />
 </resources>

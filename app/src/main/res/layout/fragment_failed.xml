@@ -5,18 +5,34 @@
     android:id="@+id/main"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@android:color/transparent"
     android:gravity="center"
-    android:padding="16dp"
-    android:background="@drawable/failed_popup"
+    android:padding="0dp"
     tools:context=".FailedFragment">
 
-
-
-    <Button
-        android:id="@+id/closeButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="210dp"
-        android:text="Close" />
+        android:background="@drawable/dia_container"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:src="@drawable/fail"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/fail_image_desc"/>
+
+
+        <ImageView
+            android:id="@+id/playAgainButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/playagain_btn"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/close_button_desc"/>
+
+    </LinearLayout>
 
 </LinearLayout>

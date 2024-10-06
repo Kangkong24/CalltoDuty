@@ -5,8 +5,7 @@ import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-
+import android.widget.ImageView
 
 
 private const val ARG_PARAM1 = "param1"
@@ -32,8 +31,8 @@ class FailedFragment : DialogFragment() {
         val view = inflater.inflate(R.layout.fragment_failed, container, false)
 
         // Find the button and set a click listener
-        val closeButton: Button = view.findViewById(R.id.closeButton)
-        closeButton.setOnClickListener {
+        val playAgainButton: ImageView = view.findViewById(R.id.playAgainButton)
+        playAgainButton.setOnClickListener {
             // Dismiss the dialog when the button is clicked
             dismiss()
         }

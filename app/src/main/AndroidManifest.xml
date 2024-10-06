@@ -19,12 +19,6 @@
             android:name=".ScenarioListActivity"
             android:exported="false" />
         <activity
-            android:name=".FailureActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SuccessActivity"
-            android:exported="false" />
-        <activity
             android:name=".GamePlay"
             android:exported="false" />
         <activity
