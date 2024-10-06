@@ -18,4 +18,7 @@
     <string name="Game_Logo">Logo</string>
     <string name="login">Login</string>
     <string name="dont_have_an_account_yet_sign_up_click_here_to_sign_up">Don\'t Have an Account Yet? Click to Sign Up</string>
+    <string name="option_txt">OPTION</string>
+    <string name="music_btn"/>
+    <string name="sound_btn"/>
 </resources>
