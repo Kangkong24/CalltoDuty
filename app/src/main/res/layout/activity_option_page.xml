@@ -36,7 +36,7 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:textColor="@color/white"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="120dp"/>
+                android:layout_marginStart="110dp"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="40dp"
                 android:contentDescription="@string/option_txt"
-                android:layout_marginEnd="30dp"/>
+                android:layout_marginEnd="45dp"/>
 
         </RelativeLayout>
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/music_btn"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="35dp"
                 android:contentDescription="@string/music_btn"/>
 
             <Switch
@@ -68,6 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="23dp"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 android:layout_marginEnd="85dp"/>
 
         </RelativeLayout>
@@ -84,20 +86,44 @@
                 android:src="@drawable/sound_btn"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="35dp"
                 android:contentDescription="@string/sound_btn"/>
 
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="85dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="70dp"
+                android:src="@drawable/change_btn"
+                android:contentDescription="@string/changeNickname_btn_desc"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="70dp"
+                android:src="@drawable/delete_btn"
+                android:contentDescription="@string/deleteAccount_btn_desc"/>
 
         </RelativeLayout>
+
     </LinearLayout>
-
-
 
 
 

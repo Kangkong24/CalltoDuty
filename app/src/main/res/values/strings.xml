@@ -21,4 +21,6 @@
     <string name="option_txt">OPTION</string>
     <string name="music_btn"/>
     <string name="sound_btn"/>
+    <string name="changeNickname_btn_desc"/>
+    <string name="deleteAccount_btn_desc"/>
 </resources>
