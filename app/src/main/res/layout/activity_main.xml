@@ -25,7 +25,7 @@
             android:contentDescription="@string/logo_desc"/>
 
         <ImageView
-            android:id="@+id/play_btn"
+            android:id="@+id/playButton"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="10dp"
@@ -33,7 +33,7 @@
             android:contentDescription="@string/play_button_desc"/>
 
         <ImageView
-            android:id="@+id/option_btn"
+            android:id="@+id/optionButton"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="10dp"
@@ -41,7 +41,7 @@
             android:contentDescription="@string/option_button_desc"/>
 
         <ImageView
-            android:id="@+id/credit_btn"
+            android:id="@+id/creditsButton"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="10dp"

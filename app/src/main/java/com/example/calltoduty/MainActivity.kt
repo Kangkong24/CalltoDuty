@@ -12,19 +12,25 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var playButton : ImageView
+    private lateinit var optionButton : ImageView
 
-    private lateinit var play_btn : ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        play_btn = this.findViewById(R.id.play_btn)
+        playButton = this.findViewById(R.id.playButton)
+        optionButton = this.findViewById(R.id.optionButton)
 
-        play_btn.setOnClickListener{
+        playButton.setOnClickListener{
             val intent = Intent(this, GameDifficulty::class.java)
             startActivity(intent)
+        }
 
+        optionButton.setOnClickListener{
+            val intent = Intent(this, OptionPage::class.java)
+            startActivity(intent)
         }
 
         Log.i("tag","Hello")

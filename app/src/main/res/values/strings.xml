@@ -21,4 +21,17 @@
     <string name="close_button_desc" />
     <string name="success_image_desc" />
     <string name="next_button_desc" />
+
+    <string name="login">Login</string>
+    <string name="option_txt">OPTION</string>
+    <string name="music_btn" />
+    <string name="sound_btn" />
+    <string name="changeNickname_btn_desc" />
+    <string name="deleteAccount_btn_desc" />
+    <string name="change_nickname_txt">CHANGE NICKNAME</string>
+    <string name="close_btn_desc" />
+    <string name="change_button" />
+    <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your Account?</string>
+    <string name="yes_button_desc" />
+    <string name="no_button_desc" />
 </resources>

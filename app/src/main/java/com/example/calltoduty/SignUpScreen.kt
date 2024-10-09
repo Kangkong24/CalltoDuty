@@ -31,7 +31,7 @@ class SignUpScreen : AppCompatActivity() {
 
     private lateinit var nickNameInput: EditText
     private lateinit var createBtn: Button
-    private lateinit var loginBtn: TextView
+    private lateinit var alreadyTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class SignUpScreen : AppCompatActivity() {
 
         nickNameInput = findViewById(R.id.nickname_input)
         createBtn = findViewById(R.id.create_btn)
-        loginBtn = findViewById(R.id.already_tv)
+        alreadyTv = findViewById(R.id.already_tv)
 
         createBtn.setOnClickListener {
             val nickname = nickNameInput.text.toString()
@@ -51,8 +51,8 @@ class SignUpScreen : AppCompatActivity() {
             }
         }
         //temporary
-        loginBtn.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+        alreadyTv.setOnClickListener{
+            val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
 
         }
