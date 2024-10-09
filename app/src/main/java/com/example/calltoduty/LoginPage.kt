@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 class LoginPage : AppCompatActivity() {
 
     private lateinit var nickNameInput : EditText
-    private lateinit var loginButton : Button
+    private lateinit var enterButton : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +20,9 @@ class LoginPage : AppCompatActivity() {
         setContentView(R.layout.activity_login_page)
 
         nickNameInput = findViewById(R.id.nn_input)
-        loginButton = findViewById(R.id.loginButton)
+        enterButton = findViewById(R.id.enterButton)
 
-        loginButton.setOnClickListener{
+        enterButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

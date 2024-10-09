@@ -48,7 +48,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/enterButton"
             android:layout_width="wrap_content"
             android:layout_height="50sp"
             android:layout_marginTop="32dp"

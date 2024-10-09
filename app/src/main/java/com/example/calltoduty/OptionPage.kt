@@ -37,8 +37,15 @@ class OptionPage : AppCompatActivity() {
             startActivity(intent)
         }
 
+        cnButton.setOnClickListener{
+            val intent = Intent(this, ChangeNIcknamePage::class.java)
+            startActivity(intent)
+        }
 
-
+        deleteButton.setOnClickListener{
+            val intent = Intent(this, DeletionPage::class.java)
+            startActivity(intent)
+        }
 
     }
 }
