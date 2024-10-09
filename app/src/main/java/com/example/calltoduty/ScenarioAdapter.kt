@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ScenarioAdapter(
     private val scenarios: List<EmergencyScenario>,
-    private val onScenarioSelected: (EmergencyScenario) -> Unit
+    private val onScenarioSelected: (EmergencyScenario, Int) -> Unit
 ) : RecyclerView.Adapter<ScenarioAdapter.ScenarioViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScenarioViewHolder {
@@ -18,7 +18,7 @@ class ScenarioAdapter(
 
     override fun onBindViewHolder(holder: ScenarioViewHolder, position: Int) {
         val scenario = scenarios[position]
-        holder.bind(scenario)
+        holder.bind(scenario, position)
     }
 
     override fun getItemCount(): Int = scenarios.size
@@ -27,10 +27,10 @@ class ScenarioAdapter(
         private val scenarioNameTextView: TextView = itemView.findViewById(R.id.scenarioNameTextView)
         private val scenarioDescriptionTextView: TextView = itemView.findViewById(R.id.scenarioDescriptionTextView)
 
-        fun bind(scenario: EmergencyScenario) {
+        fun bind(scenario: EmergencyScenario, position: Int) {
             scenarioNameTextView.text = scenario.scenarioName
-            scenarioDescriptionTextView.text = "Difficulty: ${scenario.difficulty}" // Add more details as needed
-            itemView.setOnClickListener { onScenarioSelected(scenario) }
+            scenarioDescriptionTextView.text = scenario.difficulty.toString()
+            itemView.setOnClickListener { onScenarioSelected(scenario, position) }
         }
     }
 }

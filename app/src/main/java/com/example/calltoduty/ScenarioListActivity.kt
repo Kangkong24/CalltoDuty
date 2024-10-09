@@ -30,10 +30,11 @@ class ScenarioListActivity : AppCompatActivity() {
         scenarios = getScenariosByDifficulty(selectedDifficulty)
 
         // Set up the adapter with the filtered scenarios
-        scenarioAdapter = ScenarioAdapter(scenarios) { scenario ->
+        scenarioAdapter = ScenarioAdapter(scenarios) { scenario, index ->
             // Handle scenario selection
             val intent = Intent(this, GamePlay::class.java)
             intent.putExtra("selectedScenario", scenario)
+            intent.putExtra("scenarioIndex", index) // Pass index of the selected scenario
             startActivity(intent)
         }
         recyclerView.adapter = scenarioAdapter

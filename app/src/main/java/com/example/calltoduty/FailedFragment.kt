@@ -15,13 +15,29 @@ class FailedFragment : DialogFragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    // Define an interface for communication with the activity
+    interface FailedFragmentListener {
+        fun onPlayAgain()
+    }
+    private var listener: FailedFragmentListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
+        // Ensure the host activity implements the listener interface
+        if (activity is FailedFragmentListener) {
+            listener = activity as FailedFragmentListener
+        } else {
+            throw RuntimeException("$activity must implement FailedFragmentListener")
+        }
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +49,9 @@ class FailedFragment : DialogFragment() {
         // Find the button and set a click listener
         val playAgainButton: ImageView = view.findViewById(R.id.playAgainButton)
         playAgainButton.setOnClickListener {
+
+            // Notify the activity to restart the game
+            listener?.onPlayAgain()
             // Dismiss the dialog when the button is clicked
             dismiss()
         }

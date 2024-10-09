@@ -1,20 +1,26 @@
 package com.example.calltoduty
 
-import android.content.Intent
+
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
 @Suppress("DEPRECATION")
-class GamePlay : AppCompatActivity() {
+class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
+
+    private lateinit var timer: CountDownTimer
+    private lateinit var timerTextView: TextView
+    private val timeLimit: Long = 15000 // 15 seconds per question
+    //private lateinit var messageTextView: TextView
+
 
     private lateinit var responseAdapter: ResponseAdapter
     private lateinit var recyclerView: RecyclerView
@@ -35,6 +41,11 @@ class GamePlay : AppCompatActivity() {
     private var chosenEmergencyScenario: EmergencyScenario? = null
     private var currentStep = 0
 
+    // flag to track if the game was just restarted
+    private var gameJustRestarted = false
+
+    private var scenarioIndex: Int = 0 // Store scenario index
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -47,10 +58,16 @@ class GamePlay : AppCompatActivity() {
         optionImage1 = findViewById(R.id.optionImage1)
         optionImage2 = findViewById(R.id.optionImage2)
         optionImage3 = findViewById(R.id.optionImage3)
+        timerTextView = findViewById(R.id.timerTextView)
+
+
 
         responseAdapter = ResponseAdapter(previousResponses)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = responseAdapter
+
+        // Retrieve the scenario index from the Intent
+        scenarioIndex = intent.getIntExtra("scenarioIndex", 0)
 
         // Retrieve the selected scenario from the Intent
         chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario")
@@ -74,8 +91,42 @@ class GamePlay : AppCompatActivity() {
         wrongChoices = 0
         chosenEmergencyScenario = scenario
         currentStep = 0
+        previousResponses.clear()
+        responseAdapter.notifyDataSetChanged()
         showScenario()
+        startTimer()
     }
+
+    private fun startTimer() {
+        timer = object : CountDownTimer(timeLimit, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                timerTextView.text = "Time left: $secondsRemaining s"
+            }
+
+            override fun onFinish() {
+                //previousResponses.add(Pair(true, "Hello, is anyone there?"))
+                // Only show the timeout message if the game is not just restarted
+                if (!gameJustRestarted) {
+                    previousResponses.add(Pair(true, "Hello, is anyone there?"))
+
+                    // Notify the adapter about the new message
+                    responseAdapter.notifyItemInserted(previousResponses.size - 1)
+
+                    // Optionally scroll to the bottom of the RecyclerView to show the new message
+                    recyclerView.scrollToPosition(previousResponses.size - 1)
+                }
+                // Reset the flag after the first step
+                gameJustRestarted = false
+            }
+        }.start()
+    }
+
+    private fun resetTimer() {
+        timer.cancel()
+        startTimer()
+    }
+
 
     private fun showScenario() {
         chosenEmergencyScenario?.let { scenario ->
@@ -136,7 +187,24 @@ class GamePlay : AppCompatActivity() {
         optionImage3.visibility = visibility
     }
 
+    fun loadNextScenario() {
+        // Check if there are more scenarios left in the list
+        if (scenarioIndex + 1 < emergencyScenarios.size) {
+            scenarioIndex++ // Move to the next scenario
+            chosenEmergencyScenario = emergencyScenarios[scenarioIndex]
+            gameJustRestarted = true
+            resetTimer()
+            startGame(chosenEmergencyScenario!!) // Start the next scenario
+        } else {
+            showMessage("No more scenarios left.")
+            // Optionally handle what happens if there are no more scenarios
+        }
+    }
+
+
+
     private fun handleChoice(choice: Int) {
+        resetTimer()
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
 
@@ -152,8 +220,6 @@ class GamePlay : AppCompatActivity() {
     }
 
     private fun processChoice(currentDialogue: Dialogue, choice: Int, chosenOptionText: String) {
-        // Get the response message based on the user's choice
-        //val responseMessage = currentDialogue.responseMessages?.get(choice) ?: "Invalid choice"
 
         // Add the response message to the list of previous responses
         previousResponses.add(Pair(false, chosenOptionText))
@@ -195,12 +261,25 @@ class GamePlay : AppCompatActivity() {
         }
     }
 
+    // Restart the chosen emergency scenario
+    override fun onPlayAgain() {
 
-
+        chosenEmergencyScenario?.let {
+            score = 0
+            wrongChoices = 0
+            currentStep = 0
+            previousResponses.clear()  // Clear the conversation history
+            responseAdapter.notifyDataSetChanged() // Notify adapter to reset the conversation
+            gameJustRestarted = true
+            showScenario()
+            resetTimer()
+            startGame(it)
+        }
+    }
 
 
     private fun showMessage(message: String) {
-        // Display the message in  UI, e.g., in a TextView
+        //messageTextView.text = message
     }
 
 
