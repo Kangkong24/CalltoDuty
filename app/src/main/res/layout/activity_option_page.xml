@@ -65,12 +65,12 @@
                 android:layout_marginStart="35dp"
                 android:contentDescription="@string/music_btn"/>
 
-            <androidx.appcompat.widget.SwitchCompat
+            <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/musicSwitch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="25dp"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
                 android:layout_marginEnd="90dp"/>
@@ -93,14 +93,14 @@
                 android:layout_marginStart="35dp"
                 android:contentDescription="@string/sound_btn"/>
 
-            <androidx.appcompat.widget.SwitchCompat
+            <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/soundSwitch"
                 android:layout_alignParentEnd="true"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="45dp"
                 android:layout_marginEnd="90dp"/>
         </RelativeLayout>
 
