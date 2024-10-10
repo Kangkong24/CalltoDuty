@@ -25,12 +25,12 @@ class ChangeNIcknamePage : AppCompatActivity() {
         changeButton = findViewById(R.id.changeButton)
 
         closeButton.setOnClickListener{
-            val intent = Intent(this, OptionPage::class.java)
+            val intent = Intent(this, OptionScreen::class.java)
             startActivity(intent)
         }
 
         changeButton.setOnClickListener{
-            val intent = Intent(this, OptionPage::class.java)
+            val intent = Intent(this, OptionScreen::class.java)
             startActivity(intent)
         }
 

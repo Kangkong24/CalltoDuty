@@ -21,7 +21,7 @@ class DeletionPage : AppCompatActivity() {
         noButton = findViewById(R.id.noButton)
 
         noButton.setOnClickListener{
-            val intent = Intent(this, OptionPage::class.java)
+            val intent = Intent(this, OptionScreen::class.java)
             startActivity(intent)
         }
 

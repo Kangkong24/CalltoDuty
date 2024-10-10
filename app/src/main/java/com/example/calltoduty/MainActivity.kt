@@ -2,17 +2,15 @@ package com.example.calltoduty
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var playButton : ImageView
-    private lateinit var optionButton : ImageView
+    private lateinit var optionBtn : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,24 +18,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         playButton = this.findViewById(R.id.playButton)
-        optionButton = this.findViewById(R.id.optionButton)
+        optionBtn = this.findViewById(R.id.optionBtn)
 
         playButton.setOnClickListener{
             val intent = Intent(this, GameDifficulty::class.java)
             startActivity(intent)
         }
 
-        optionButton.setOnClickListener{
-            val intent = Intent(this, OptionPage::class.java)
+        optionBtn.setOnClickListener{
+            val intent = Intent(this, OptionScreen::class.java)
             startActivity(intent)
         }
 
+        /*
         Log.i("tag","Hello")
-        Log.i("tag","World")
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        Log.i("tag","World") */
+
     }
 }
