@@ -20,7 +20,7 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="300dp"
-            android:src="@drawable/fail"
+            android:src="@drawable/close"
             android:scaleType="fitCenter"
             android:contentDescription="@string/fail_image_desc"/>
 

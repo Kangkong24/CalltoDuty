@@ -51,6 +51,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_play)
 
+        // Initialize UI components
         recyclerView = findViewById(R.id.recyclerView)
         optionButton1 = findViewById(R.id.optionButton1)
         optionButton2 = findViewById(R.id.optionButton2)
@@ -61,15 +62,13 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         timerTextView = findViewById(R.id.timerTextView)
 
 
-
+        // Set up RecyclerView with ResponseAdapter
         responseAdapter = ResponseAdapter(previousResponses)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = responseAdapter
 
-        // Retrieve the scenario index from the Intent
+        // Retrieve the scenario index and selected scenario from the Intent
         scenarioIndex = intent.getIntExtra("scenarioIndex", 0)
-
-        // Retrieve the selected scenario from the Intent
         chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario")
 
         // Start the game with the selected scenario
@@ -77,6 +76,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             startGame(it)
         }
 
+        // Set up option buttons click listeners
         optionButton1.setOnClickListener { handleChoice(0) }
         optionButton2.setOnClickListener { handleChoice(1) }
         optionButton3.setOnClickListener { handleChoice(2) }
@@ -86,6 +86,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         optionImage3.setOnClickListener { handleChoice(2) }
     }
 
+    // Initialize game state
     private fun startGame(scenario: EmergencyScenario) {
         score = 0
         wrongChoices = 0
@@ -105,8 +106,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             }
 
             override fun onFinish() {
-                //previousResponses.add(Pair(true, "Hello, is anyone there?"))
-                // Only show the timeout message if the game is not just restarted
+                // Handle timer finish (timeout)
                 if (!gameJustRestarted) {
                     previousResponses.add(Pair(true, "Hello, is anyone there?"))
 
@@ -133,7 +133,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             if (currentStep < scenario.steps.size) {
                 val currentDialogue = scenario.steps[currentStep]
 
-                // Add the scenario message to the list of previous responses
+                // Add the current dialogue message to previous responses
                 previousResponses.add(Pair(true, currentDialogue.message))
                 responseAdapter.notifyItemInserted(previousResponses.size - 1)
                 recyclerView.post {
@@ -204,7 +204,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
 
     private fun handleChoice(choice: Int) {
-        resetTimer()
+        resetTimer() // Reset timer when the user makes a choice
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
 
@@ -221,7 +221,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     private fun processChoice(currentDialogue: Dialogue, choice: Int, chosenOptionText: String) {
 
-        // Add the response message to the list of previous responses
+        // Add the user's choice to previous responses
         previousResponses.add(Pair(false, chosenOptionText))
         responseAdapter.notifyItemInserted(previousResponses.size - 1)
 
@@ -238,16 +238,13 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         } else {
             currentStep++  // Increment before showing the next scenario
             if (currentStep < (chosenEmergencyScenario?.steps?.size ?: 0)) {
-                // Get the next step dialogue
+                // Prepare the next dialogue based on the user's choice
                 chosenEmergencyScenario?.steps?.getOrNull(currentStep)?.let { nextDialogue ->
-                    // Get the response message for the current choice, fallback to the original nextDialogue message
                     val responseMessage = currentDialogue.responseMessages?.get(choice)
                     val updatedMessage = responseMessage ?: nextDialogue.message
-
-                    // Update the next dialogue with the response message
                     val updatedDialogue = nextDialogue.copy(message = updatedMessage)
 
-                    // Replace the step in the list with the updated dialogue
+                    // Replace the current step with the updated dialogue
                     chosenEmergencyScenario?.steps =
                         chosenEmergencyScenario!!.steps.toMutableList().apply {
                             set(currentStep, updatedDialogue)
