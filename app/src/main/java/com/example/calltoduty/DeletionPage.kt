@@ -43,11 +43,17 @@ class DeletionPage : AppCompatActivity() {
         }
 
         yesButton.setOnClickListener {
-            // Replace with the actual stored nickname
-            deleteAccount(signUpNN)
-            deleteAccount(oldNickname)
+            // Use the oldNickname for deletion
+            if (oldNickname.isNotEmpty()) {
+                deleteAccount(oldNickname)
+            } else if (signUpNN.isNotEmpty()) {
+                deleteAccount(signUpNN)
+            } else {
+                Toast.makeText(this, "Nickname is not set.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
+
 
     private fun deleteAccount(nickname: String) {
         val retrofit = Retrofit.Builder()
