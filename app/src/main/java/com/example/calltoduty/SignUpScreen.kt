@@ -19,7 +19,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-interface ApiService {
+interface ApiServiceSignUp {
     @FormUrlEncoded
     @POST("signup.php") // Ensure this matches your server endpoint
     fun signup(
@@ -28,6 +28,8 @@ interface ApiService {
 }
 
 class SignUpScreen : AppCompatActivity() {
+
+
 
     private lateinit var nickNameInput: EditText
     private lateinit var createBtn: Button
@@ -66,11 +68,12 @@ class SignUpScreen : AppCompatActivity() {
 
     private fun sendSignupData(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") //Device IP
+            .baseUrl("http://192.168.1.61/rest_api/") //Device IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = retrofit.create(ApiServiceSignUp::class.java)
+
 
         apiService.signup(nickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -81,6 +84,7 @@ class SignUpScreen : AppCompatActivity() {
                     } else {
                         Toast.makeText(this@SignUpScreen, "Signup Successful!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpScreen, MainActivity::class.java)
+                        intent.putExtra("signUp_nickname", nickname) // Pass the nickname as current nickname
                         startActivity(intent)
                     }
                 } else {

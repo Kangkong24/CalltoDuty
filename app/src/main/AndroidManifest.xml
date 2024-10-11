@@ -26,10 +26,7 @@
             android:name=".DeletionPage"
             android:exported="false" />
         <activity
-            android:name=".ChangeNIcknamePage"
-            android:exported="false" />
-        <activity
-            android:name=".OptionPage"
+            android:name=".ChangeNicknamePage"
             android:exported="false" />
         <activity
             android:name=".ScenarioListActivity"

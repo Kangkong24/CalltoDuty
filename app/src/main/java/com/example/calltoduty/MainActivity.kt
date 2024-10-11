@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.math.sign
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,8 +27,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         optionBtn.setOnClickListener{
+            val signUpNN = intent.getStringExtra("signUp_nickname")
+            val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
             val intent = Intent(this, OptionScreen::class.java)
+            intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
+            intent.putExtra("signUp_nickname", signUpNN)
             startActivity(intent)
+
         }
 
         /*

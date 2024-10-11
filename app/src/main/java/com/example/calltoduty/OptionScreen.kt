@@ -15,8 +15,8 @@ class OptionScreen : AppCompatActivity() {
     private lateinit var closeButton : ImageView
     private lateinit var musicSwitch : Switch
     private lateinit var soundSwitch : Switch
-    private lateinit var cnButton : Button
-    private lateinit var deleteButton : Button
+    private lateinit var cnButton : ImageView
+    private lateinit var deleteButton : ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +36,21 @@ class OptionScreen : AppCompatActivity() {
         }
 
         cnButton.setOnClickListener{
-            val intent = Intent(this, ChangeNIcknamePage::class.java)
+            val signUpNN = intent.getStringExtra("signUp_nickname")
+            val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
+            val intent = Intent(this, ChangeNicknamePage::class.java)
+            intent.putExtra("currentNickname", currentNickname) // Pass it to ChangeNicknamePage
+            intent.putExtra("signUp_nickname", signUpNN)
             startActivity(intent)
         }
 
+
         deleteButton.setOnClickListener{
+            val signUpNN = intent.getStringExtra("signUp_nickname")
+            val currentNickname = intent.getStringExtra("currentNickname")
             val intent = Intent(this, DeletionPage::class.java)
+            intent.putExtra("currentNickname", currentNickname)
+            intent.putExtra("signUp_nickname", signUpNN)
             startActivity(intent)
         }
 
