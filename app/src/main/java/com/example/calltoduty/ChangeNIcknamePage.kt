@@ -77,6 +77,7 @@ class ChangeNicknamePage : AppCompatActivity() {
                     if (responseBody == "Nickname updated successfully") {
                         Toast.makeText(this@ChangeNicknamePage, "Nickname updated", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@ChangeNicknamePage, OptionScreen::class.java)
+                        intent.putExtra("updatedNicname", newNickname)
                         startActivity(intent)
                     } else {
                         Toast.makeText(this@ChangeNicknamePage, "Update failed", Toast.LENGTH_SHORT).show()

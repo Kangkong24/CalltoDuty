@@ -21,18 +21,22 @@ class MainActivity : AppCompatActivity() {
         playButton = this.findViewById(R.id.playButton)
         optionBtn = this.findViewById(R.id.optionBtn)
 
+        val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
+        val signUpNN = intent.getStringExtra("signUp_nickname")
+        val updatedNickname = intent.getStringExtra("updatedNickname")
+
         playButton.setOnClickListener{
             val intent = Intent(this, GameDifficulty::class.java)
             startActivity(intent)
         }
 
         optionBtn.setOnClickListener{
-            val signUpNN = intent.getStringExtra("signUp_nickname")
-            val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
+            // Get the current nickname
             val intent = Intent(this, OptionScreen::class.java)
             intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
             intent.putExtra("signUp_nickname", signUpNN)
             startActivity(intent)
+
 
         }
 

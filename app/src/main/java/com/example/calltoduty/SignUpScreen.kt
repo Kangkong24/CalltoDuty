@@ -83,6 +83,7 @@ class SignUpScreen : AppCompatActivity() {
                         Toast.makeText(this@SignUpScreen, "Nickname already taken", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@SignUpScreen, "Signup Successful!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SignUpScreen, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpScreen, MainActivity::class.java)
                         intent.putExtra("signUp_nickname", nickname) // Pass the nickname as current nickname
                         startActivity(intent)

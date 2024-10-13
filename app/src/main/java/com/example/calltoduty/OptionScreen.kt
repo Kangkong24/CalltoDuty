@@ -30,27 +30,33 @@ class OptionScreen : AppCompatActivity() {
         cnButton = findViewById(R.id.cnButton)
         deleteButton = findViewById(R.id.deleteButton)
 
+        val signUpNN = intent.getStringExtra("signUp_nickname")
+        val currentNickname = intent.getStringExtra("currentNickname")
+        val updatedNickname = intent.getStringExtra("updatedNickname")
+
         closeButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("currentNickname", currentNickname)
+            intent.putExtra("signUp_nickname", signUpNN)
+            intent.putExtra("updatedNickname", updatedNickname)
             startActivity(intent)
         }
 
         cnButton.setOnClickListener{
-            val signUpNN = intent.getStringExtra("signUp_nickname")
-            val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
+            // Get the current nickname
             val intent = Intent(this, ChangeNicknamePage::class.java)
             intent.putExtra("currentNickname", currentNickname) // Pass it to ChangeNicknamePage
             intent.putExtra("signUp_nickname", signUpNN)
+            intent.putExtra("updatedNickname", updatedNickname)
             startActivity(intent)
         }
 
 
         deleteButton.setOnClickListener{
-            val signUpNN = intent.getStringExtra("signUp_nickname")
-            val currentNickname = intent.getStringExtra("currentNickname")
             val intent = Intent(this, DeletionPage::class.java)
             intent.putExtra("currentNickname", currentNickname)
             intent.putExtra("signUp_nickname", signUpNN)
+            intent.putExtra("updatedNickname", updatedNickname)
             startActivity(intent)
         }
 

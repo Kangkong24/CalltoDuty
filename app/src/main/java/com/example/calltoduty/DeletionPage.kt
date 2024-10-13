@@ -36,6 +36,7 @@ class DeletionPage : AppCompatActivity() {
 
         val oldNickname = intent.getStringExtra("currentNickname") ?: ""
         val signUpNN = intent.getStringExtra("signUp_nickname") ?: ""
+        val updatedNickname = intent.getStringExtra("updatedNickname") ?: ""
 
         noButton.setOnClickListener {
             val intent = Intent(this, OptionScreen::class.java)
@@ -48,6 +49,8 @@ class DeletionPage : AppCompatActivity() {
                 deleteAccount(oldNickname)
             } else if (signUpNN.isNotEmpty()) {
                 deleteAccount(signUpNN)
+            } else if (updatedNickname.isNotEmpty()) {
+                deleteAccount(updatedNickname)
             } else {
                 Toast.makeText(this, "Nickname is not set.", Toast.LENGTH_SHORT).show()
             }
