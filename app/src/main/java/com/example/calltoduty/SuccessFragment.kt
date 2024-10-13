@@ -33,6 +33,8 @@ class SuccessFragment : DialogFragment() {
         // Find the button and set a click listener
         val nextLevelButton: ImageView = view.findViewById(R.id.nextLevelButton)
         nextLevelButton.setOnClickListener {
+            // Communicate with GamePlay activity to load the next scenario
+            (activity as? GamePlay)?.loadNextScenario()
             // Dismiss the dialog when the button is clicked
             dismiss()
         }

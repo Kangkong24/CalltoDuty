@@ -1,20 +1,27 @@
 package com.example.calltoduty
 
-import android.content.Intent
+
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.calltoduty.MusicManager.stopSound
 
 
 @Suppress("DEPRECATION")
-class GamePlay : AppCompatActivity() {
+class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
+
+    private lateinit var timer: CountDownTimer
+    private lateinit var timerTextView: TextView
+    private val timeLimit: Long = 15000 // 15 seconds per question
+    //private lateinit var messageTextView: TextView
+
 
     private lateinit var responseAdapter: ResponseAdapter
     private lateinit var recyclerView: RecyclerView
@@ -35,11 +42,18 @@ class GamePlay : AppCompatActivity() {
     private var chosenEmergencyScenario: EmergencyScenario? = null
     private var currentStep = 0
 
+    // flag to track if the game was just restarted
+    private var gameJustRestarted = false
+
+    private var scenarioIndex: Int = 0 // Store scenario index
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_play)
 
+
+        // Initialize UI components
         recyclerView = findViewById(R.id.recyclerView)
         optionButton1 = findViewById(R.id.optionButton1)
         optionButton2 = findViewById(R.id.optionButton2)
@@ -47,12 +61,16 @@ class GamePlay : AppCompatActivity() {
         optionImage1 = findViewById(R.id.optionImage1)
         optionImage2 = findViewById(R.id.optionImage2)
         optionImage3 = findViewById(R.id.optionImage3)
+        timerTextView = findViewById(R.id.timerTextView)
 
+
+        // Set up RecyclerView with ResponseAdapter
         responseAdapter = ResponseAdapter(previousResponses)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = responseAdapter
 
-        // Retrieve the selected scenario from the Intent
+        // Retrieve the scenario index and selected scenario from the Intent
+        scenarioIndex = intent.getIntExtra("scenarioIndex", 0)
         chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario")
 
         // Start the game with the selected scenario
@@ -60,6 +78,7 @@ class GamePlay : AppCompatActivity() {
             startGame(it)
         }
 
+        // Set up option buttons click listeners
         optionButton1.setOnClickListener { handleChoice(0) }
         optionButton2.setOnClickListener { handleChoice(1) }
         optionButton3.setOnClickListener { handleChoice(2) }
@@ -67,22 +86,78 @@ class GamePlay : AppCompatActivity() {
         optionImage1.setOnClickListener { handleChoice(0) }
         optionImage2.setOnClickListener { handleChoice(1) }
         optionImage3.setOnClickListener { handleChoice(2) }
+
+        // Initialize and start the game-specific sound
+        MusicManager.initialize(this, "gameplay_sound", R.raw.game_bgm, loop = true, volume = 100.0f)
+        MusicManager.startSound("gameplay_sound")
     }
 
+    override fun onPause() {
+        super.onPause()
+        stopSound("gameplay_music")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MusicManager.startSound("gameplay_sound")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopSound("gameplay_sound")  // Stop the gameplay sound when the activity is no longer visible
+    }
+
+
+
+    // Initialize game state
     private fun startGame(scenario: EmergencyScenario) {
         score = 0
         wrongChoices = 0
         chosenEmergencyScenario = scenario
         currentStep = 0
+        previousResponses.clear()
+        responseAdapter.notifyDataSetChanged()
         showScenario()
+        startTimer()
+        stopSound("bg_music")
     }
+
+    private fun startTimer() {
+        timer = object : CountDownTimer(timeLimit, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = millisUntilFinished / 1000
+                timerTextView.text = "Time left: $secondsRemaining s"
+            }
+
+            override fun onFinish() {
+                // Handle timer finish (timeout)
+                if (!gameJustRestarted) {
+                    previousResponses.add(Pair(true, "Hello, is anyone there?"))
+
+                    // Notify the adapter about the new message
+                    responseAdapter.notifyItemInserted(previousResponses.size - 1)
+
+                    // Optionally scroll to the bottom of the RecyclerView to show the new message
+                    recyclerView.scrollToPosition(previousResponses.size - 1)
+                }
+                // Reset the flag after the first step
+                gameJustRestarted = false
+            }
+        }.start()
+    }
+
+    private fun resetTimer() {
+        timer.cancel()
+        startTimer()
+    }
+
 
     private fun showScenario() {
         chosenEmergencyScenario?.let { scenario ->
             if (currentStep < scenario.steps.size) {
                 val currentDialogue = scenario.steps[currentStep]
 
-                // Add the scenario message to the list of previous responses
+                // Add the current dialogue message to previous responses
                 previousResponses.add(Pair(true, currentDialogue.message))
                 responseAdapter.notifyItemInserted(previousResponses.size - 1)
                 recyclerView.post {
@@ -136,7 +211,24 @@ class GamePlay : AppCompatActivity() {
         optionImage3.visibility = visibility
     }
 
+    fun loadNextScenario() {
+        // Check if there are more scenarios left in the list
+        if (scenarioIndex + 1 < emergencyScenarios.size) {
+            scenarioIndex++ // Move to the next scenario
+            chosenEmergencyScenario = emergencyScenarios[scenarioIndex]
+            gameJustRestarted = true
+            resetTimer()
+            startGame(chosenEmergencyScenario!!) // Start the next scenario
+        } else {
+            showMessage("No more scenarios left.")
+            // Optionally handle what happens if there are no more scenarios
+        }
+    }
+
+
+
     private fun handleChoice(choice: Int) {
+        resetTimer() // Reset timer when the user makes a choice
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
 
@@ -152,10 +244,8 @@ class GamePlay : AppCompatActivity() {
     }
 
     private fun processChoice(currentDialogue: Dialogue, choice: Int, chosenOptionText: String) {
-        // Get the response message based on the user's choice
-        //val responseMessage = currentDialogue.responseMessages?.get(choice) ?: "Invalid choice"
 
-        // Add the response message to the list of previous responses
+        // Add the user's choice to previous responses
         previousResponses.add(Pair(false, chosenOptionText))
         responseAdapter.notifyItemInserted(previousResponses.size - 1)
 
@@ -172,16 +262,13 @@ class GamePlay : AppCompatActivity() {
         } else {
             currentStep++  // Increment before showing the next scenario
             if (currentStep < (chosenEmergencyScenario?.steps?.size ?: 0)) {
-                // Get the next step dialogue
+                // Prepare the next dialogue based on the user's choice
                 chosenEmergencyScenario?.steps?.getOrNull(currentStep)?.let { nextDialogue ->
-                    // Get the response message for the current choice, fallback to the original nextDialogue message
                     val responseMessage = currentDialogue.responseMessages?.get(choice)
                     val updatedMessage = responseMessage ?: nextDialogue.message
-
-                    // Update the next dialogue with the response message
                     val updatedDialogue = nextDialogue.copy(message = updatedMessage)
 
-                    // Replace the step in the list with the updated dialogue
+                    // Replace the current step with the updated dialogue
                     chosenEmergencyScenario?.steps =
                         chosenEmergencyScenario!!.steps.toMutableList().apply {
                             set(currentStep, updatedDialogue)
@@ -195,12 +282,25 @@ class GamePlay : AppCompatActivity() {
         }
     }
 
+    // Restart the chosen emergency scenario
+    override fun onPlayAgain() {
 
-
+        chosenEmergencyScenario?.let {
+            score = 0
+            wrongChoices = 0
+            currentStep = 0
+            previousResponses.clear()  // Clear the conversation history
+            responseAdapter.notifyDataSetChanged() // Notify adapter to reset the conversation
+            gameJustRestarted = true
+            showScenario()
+            resetTimer()
+            startGame(it)
+        }
+    }
 
 
     private fun showMessage(message: String) {
-        // Display the message in  UI, e.g., in a TextView
+        //messageTextView.text = message
     }
 
 

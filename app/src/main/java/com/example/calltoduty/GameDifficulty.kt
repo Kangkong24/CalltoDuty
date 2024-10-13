@@ -38,4 +38,13 @@ class GameDifficulty : AppCompatActivity() {
         intent.putExtra("difficulty", difficulty.name) // Pass the difficulty level as a string
         startActivity(intent)
     }
+
+    override fun onResume() {
+        super.onResume()
+        //Start the music again when returning to this activity
+        MusicManager.startSound("bg_music")
+    }
+
+
+
 }

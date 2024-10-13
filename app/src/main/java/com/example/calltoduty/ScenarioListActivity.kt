@@ -42,4 +42,11 @@ class ScenarioListActivity : AppCompatActivity() {
     private fun getScenariosByDifficulty(difficulty: Difficulty): List<EmergencyScenario> {
         return emergencyScenarios.filter { it.difficulty == difficulty }
     }
+
+    override fun onResume() {
+        super.onResume()
+        //Start the music again when returning to this activity
+        MusicManager.startSound("bg_music")
+    }
+
 }

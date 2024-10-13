@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import android.media.MediaPlayer
 import kotlin.math.sign
 
 
@@ -21,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         playButton = this.findViewById(R.id.playButton)
         optionBtn = this.findViewById(R.id.optionBtn)
 
+
+        MusicManager.initialize(this, "bg_music", R.raw.bg_music, loop = true, volume = 100.0f)
+        MusicManager.startSound("bg_music")
+
         val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
         val signUpNN = intent.getStringExtra("signUp_nickname")
         val updatedNickname = intent.getStringExtra("updatedNickname")
@@ -30,7 +35,25 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        optionBtn.setOnClickListener{
+
+        optionBtn.setOnClickListener {
+            val optionFragment = OptionFragment.newInstance().apply {
+                arguments = Bundle().apply {
+                    putString("currentNickname", currentNickname)
+                    putString("signUp_nickname", signUpNN)
+                    putString("updatedNickname", updatedNickname)
+                }
+            }
+            optionFragment.show(supportFragmentManager, "OptionFragment")
+        }
+
+
+
+
+
+
+
+        /*optionBtn.setOnClickListener{
             // Get the current nickname
             val intent = Intent(this, OptionScreen::class.java)
             intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
@@ -38,11 +61,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
 
 
-        }
+        }*/
 
         /*
         Log.i("tag","Hello")
         Log.i("tag","World") */
 
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        MusicManager.release()
     }
 }

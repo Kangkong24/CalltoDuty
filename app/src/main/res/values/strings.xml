@@ -34,4 +34,6 @@
     <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your Account?</string>
     <string name="yes_button_desc" />
     <string name="no_button_desc" />
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

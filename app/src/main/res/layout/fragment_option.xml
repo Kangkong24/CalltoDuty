@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dia_container"
+    android:gravity="center"
+    android:padding="0dp"
+    tools:context=".OptionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Title and Close Button Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/optionTitle"
+                android:text="@string/option_txt"
+                android:textSize="28sp"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/poppins_semibold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="10dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/closeButton"
+                android:src="@drawable/close_btn"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/close_btn_desc"
+                android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+
+        <!-- Music Switch Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/musicButton"
+                android:src="@drawable/music_btn"
+                android:contentDescription="@string/music_btn"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/musicSwitch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="9dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+
+        <!-- Sound Switch Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/soundButton"
+                android:src="@drawable/sound_btn"
+                android:contentDescription="@string/sound_btn"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:id="@+id/soundSwitch"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="9dp"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+
+        <!-- Change Nickname and Delete Account Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cnButton"
+                android:src="@drawable/change_btn"
+                android:contentDescription="@string/changeNickname_btn_desc"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/deleteButton"
+                android:src="@drawable/delete_btn"
+                android:contentDescription="@string/deleteAccount_btn_desc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
