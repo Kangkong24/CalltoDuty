@@ -39,8 +39,7 @@ class DeletionPage : AppCompatActivity() {
         val updatedNickname = intent.getStringExtra("updatedNickname") ?: ""
 
         noButton.setOnClickListener {
-            val intent = Intent(this, OptionScreen::class.java)
-            startActivity(intent)
+            finish() // Closes the current activity and returns to the previous one
         }
 
         yesButton.setOnClickListener {

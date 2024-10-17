@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         optionBtn = this.findViewById(R.id.optionBtn)
 
 
-        MusicManager.initialize(this, "bg_music", R.raw.bg_music, loop = true, volume = 100.0f)
+        MusicManager.initialize(this, "bg_music", R.raw.bg_music, loop = true, volume = -5.0f)
         MusicManager.startSound("bg_music")
 
         val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname

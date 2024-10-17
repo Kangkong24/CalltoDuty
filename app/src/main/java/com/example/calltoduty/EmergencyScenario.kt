@@ -102,6 +102,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
                     1 to "Someone broke into my house!",
                     2 to "I'm at 123 Elm Street."
                 )
+
             ),
             // Second Dialogue - Message will depend on the previous choice
             Dialogue(

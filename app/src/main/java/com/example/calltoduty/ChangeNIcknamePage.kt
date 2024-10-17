@@ -44,8 +44,7 @@ class ChangeNicknamePage : AppCompatActivity() {
         val signUpNN = intent.getStringExtra("signUp_nickname") ?: ""
 
         closeButton.setOnClickListener {
-            val intent = Intent(this, OptionScreen::class.java)
-            startActivity(intent)
+            finish() // Closes the current activity and returns to the previous one
         }
 
         changeButton.setOnClickListener {
