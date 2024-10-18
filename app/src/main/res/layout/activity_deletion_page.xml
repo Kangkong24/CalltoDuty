@@ -12,51 +12,53 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:gravity="top|center_horizontal"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:background="@drawable/dia_container"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
+            android:id="@+id/difficultyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/difficultyTitle"
             android:text="@string/are_you_sure_you_want_to_delete_your_account"
             android:textAlignment="center"
             android:textSize="25sp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="20dp"
             android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/white"
-            />
+            android:textColor="@color/white"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <Button
                 android:id="@+id/yesButton"
-                android:src="@drawable/yes_btn"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="50dp"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:fontFamily="@font/poppins_semibold"
+                android:padding="10dp"
+                android:backgroundTint="#DC1010"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="40dp"
                 android:contentDescription="@string/yes_button_desc"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <Button
                 android:id="@+id/noButton"
-                android:src="@drawable/no_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:fontFamily="@font/poppins_semibold"
+                android:padding="10dp"
+                android:backgroundTint="#DC1010"
+                android:textColor="#FFFFFF"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="50dp"
+                android:layout_marginEnd="40dp"
                 android:contentDescription="@string/no_button_desc"/>
-
         </RelativeLayout>
-
-
-
     </LinearLayout>
-
 </RelativeLayout>

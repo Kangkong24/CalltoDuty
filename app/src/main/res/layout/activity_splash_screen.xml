@@ -46,16 +46,8 @@
                     android:layout_height="25dp"
                     android:indeterminate="false"
                     android:max="100"
-                    android:progressDrawable="@drawable/loading_bar" />
+                    android:progressDrawable="@drawable/loading_anim" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:gravity="center"
-                    android:text="Loading"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
             </FrameLayout>
         </RelativeLayout>
 

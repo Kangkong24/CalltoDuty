@@ -2,6 +2,7 @@ package com.example.calltoduty
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,8 @@ interface ApiServiceDelete {
 
 class DeletionPage : AppCompatActivity() {
 
-    private lateinit var yesButton: ImageView
-    private lateinit var noButton: ImageView
+    private lateinit var yesButton: Button
+    private lateinit var noButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,7 @@ class DeletionPage : AppCompatActivity() {
 
     private fun deleteAccount(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.100.16/delete.php/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

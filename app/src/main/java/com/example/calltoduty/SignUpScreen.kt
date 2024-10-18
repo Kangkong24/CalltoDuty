@@ -54,7 +54,7 @@ class SignUpScreen : AppCompatActivity() {
         }
         //temporary
         alreadyTv.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
 
         }
@@ -68,7 +68,7 @@ class SignUpScreen : AppCompatActivity() {
 
     private fun sendSignupData(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") //Device IP
+            .baseUrl("http://192.168.100.16/") //Device IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

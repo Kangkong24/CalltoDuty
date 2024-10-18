@@ -50,7 +50,7 @@ class LoginPage : AppCompatActivity() {
 
     private fun checkLogin(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.100.16/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -64,6 +64,7 @@ class LoginPage : AppCompatActivity() {
 
                     if (responseBody?.trim() == "Login successful") {
                         // Pass current nickname to the next screen
+                        Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@LoginPage, MainActivity::class.java)
                         intent.putExtra("currentNickname", nickname)
                         startActivity(intent)

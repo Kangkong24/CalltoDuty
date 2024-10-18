@@ -47,32 +47,4 @@ object MusicManager {
         soundMap[soundName]?.setVolume(volume, volume)  // Adjust volume for the specified sound
     }
 
-
-
-
-    /*private var mediaPlayer: MediaPlayer? = null
-
-    fun initialize(context: Context) {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.bg_music).apply {
-                isLooping = true
-            }
-        }
-    }
-
-    fun startMusic() {
-        mediaPlayer?.start()
-    }
-
-    fun stopMusic() {
-        mediaPlayer?.pause()
-    }
-
-    fun release() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-    }
-
-    fun isPlaying() = mediaPlayer?.isPlaying ?: false*/
-
 }

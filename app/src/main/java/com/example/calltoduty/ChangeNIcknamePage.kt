@@ -63,7 +63,7 @@ class ChangeNicknamePage : AppCompatActivity() {
 
     private fun updateNickname(oldNickname: String, newNickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.100.16/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -76,10 +76,10 @@ class ChangeNicknamePage : AppCompatActivity() {
                     if (responseBody == "Nickname updated successfully") {
                         Toast.makeText(this@ChangeNicknamePage, "Nickname updated", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@ChangeNicknamePage, OptionScreen::class.java)
-                        intent.putExtra("updatedNicname", newNickname)
+                        intent.putExtra("updatedNickname", newNickname)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(this@ChangeNicknamePage, "Update failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ChangeNicknamePage, "Updated successfully", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
