@@ -44,14 +44,17 @@ class SignUpScreen : AppCompatActivity() {
         alreadyTv = findViewById(R.id.already_tv)
 
         createBtn.setOnClickListener {
-            val nickname = nickNameInput.text.toString()
+            val nickname = nickNameInput.text.toString().trim()
 
-            if (nickname.isNotEmpty()) {
-                sendSignupData(nickname)
-            } else {
+            if (nickname.isEmpty()) {
                 Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show()
+            } else if (nickname.contains(" ")) {
+                Toast.makeText(this, "Nickname cannot contain spaces", Toast.LENGTH_SHORT).show()
+            } else {
+                sendSignupData(nickname)
             }
         }
+
         //temporary
         alreadyTv.setOnClickListener{
             val intent = Intent(this, LoginPage::class.java)
@@ -68,7 +71,7 @@ class SignUpScreen : AppCompatActivity() {
 
     private fun sendSignupData(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") //Device IP
+            .baseUrl("http://192.168.43.92/rest_api/") //Device IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

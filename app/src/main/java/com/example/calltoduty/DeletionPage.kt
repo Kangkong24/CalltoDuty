@@ -60,7 +60,7 @@ class DeletionPage : AppCompatActivity() {
 
     private fun deleteAccount(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/delete.php/") // Change to your device's IP
+            .baseUrl("http://192.168.43.92/rest_api/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
