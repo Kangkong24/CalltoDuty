@@ -1,6 +1,7 @@
 package com.example.calltoduty
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -13,11 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calltoduty.MusicManager.stopSound
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Suppress("DEPRECATION")
 class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
+
+    private lateinit var apiService: ApiService // Declare the ApiService variable
     private lateinit var timer: CountDownTimer
     private lateinit var timerTextView: TextView
     private val timeLimit: Long = 15000 // 15 seconds per question
@@ -53,7 +58,16 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_play)
 
-        gameProgressManager = GameProgressManager(this)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://192.168.100.16/") // Change to your server's base URL
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        // Create an instance of ApiService
+        apiService = retrofit.create(ApiService::class.java)
+
+        // Initialize GameProgressManager with the ApiService
+        gameProgressManager = GameProgressManager(this, apiService)
         // Initialize UI components
         recyclerView = findViewById(R.id.recyclerView)
         optionButton1 = findViewById(R.id.optionButton1)
@@ -96,6 +110,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     override fun onPause() {
         super.onPause()
         stopSound("gameplay_music")
+        timer.cancel()
     }
 
     override fun onResume() {
@@ -297,7 +312,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             previousResponses.clear()  // Clear the conversation history
             responseAdapter.notifyDataSetChanged() // Notify adapter to reset the conversation
             gameJustRestarted = true
-            showScenario()
+            //showScenario()
             resetTimer()
             startGame(it)
         }
@@ -310,18 +325,37 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
 
     private fun endGame(success: Boolean) {
-        if (success) {
-            gameProgressManager.markScenarioAsCompleted(chosenEmergencyScenario!!.scenarioName)
-            showMessage("You successfully helped the caller. Your score: $score")
-            //saveCompletedScenario(chosenEmergencyScenario!!)
-            val successFragment = SuccessFragment.newInstance("param1", "param2")
-            successFragment.show(supportFragmentManager, "successFragment")
-        } else {
-            showMessage("Game over - Too many wrong responses. Your score: $score")
-            val failedFragment = FailedFragment.newInstance("param1", "param2")
-            failedFragment.show(supportFragmentManager, "failedFragment")
+        chosenEmergencyScenario?.let { scenario ->
+            // Retrieve the nickname from SharedPreferences
+            val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
+            val nickname = sharedPreferences.getString("nickname", "") ?: ""
+
+            if (nickname.isNotEmpty()) {
+                if (success) {
+                    // Mark the scenario as completed
+                    gameProgressManager.markScenarioAsCompleted(nickname, scenario.scenarioName)
+                    showMessage("You successfully helped the caller. Your score: $score")
+
+                    // Show the success fragment
+                    val successFragment = SuccessFragment.newInstance("param1", "param2")
+                    successFragment.show(supportFragmentManager, "successFragment")
+                } else {
+                    // Game over scenario
+                    showMessage("Game over - Too many wrong responses. Your score: $score")
+
+                    // Show the failed fragment
+                    val failedFragment = FailedFragment.newInstance("param1", "param2")
+                    failedFragment.show(supportFragmentManager, "failedFragment")
+                }
+            } else {
+                showMessage("Error: Nickname is empty")
+            }
+        } ?: run {
+            showMessage("Error: Scenario not selected")
         }
     }
+
+
 
 
 }

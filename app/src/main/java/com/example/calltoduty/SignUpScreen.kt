@@ -54,7 +54,7 @@ class SignUpScreen : AppCompatActivity() {
         }
         //temporary
         alreadyTv.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
 
         }

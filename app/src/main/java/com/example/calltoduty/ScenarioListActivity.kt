@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ScenarioListActivity : AppCompatActivity() {
     private lateinit var gameProgressManager: GameProgressManager
@@ -21,9 +23,11 @@ class ScenarioListActivity : AppCompatActivity() {
         initViews()
         setupGameProgressManager()
         loadScenarios()
-        unlockScenariosProgressively()
         setupRecyclerView()
+        val nickname = intent.getStringExtra("nickname") ?: ""
+        unlockScenariosProgressively(nickname)
 
+        
         // Set up reset button listener
         findViewById<Button>(R.id.reset_btn).setOnClickListener {
             resetProgress()
@@ -36,7 +40,13 @@ class ScenarioListActivity : AppCompatActivity() {
     }
 
     private fun setupGameProgressManager() {
-        gameProgressManager = GameProgressManager(this)
+        val apiService = Retrofit.Builder()
+            .baseUrl("http://192.168.100.16/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+
+        gameProgressManager = GameProgressManager(this, apiService)
     }
 
     private fun loadScenarios() {
@@ -59,13 +69,24 @@ class ScenarioListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun unlockScenariosProgressively() {
+    private fun unlockScenariosProgressively(nickname: String) {
         for (i in scenarios.indices) {
             val scenario = scenarios[i]
             val previousScenario = if (i > 0) scenarios[i - 1] else null
-            scenario.isUnlocked = gameProgressManager.isScenarioUnlocked(scenario.scenarioName, previousScenario?.scenarioName)
+
+            if (previousScenario == null) {
+                scenario.isUnlocked = true // Unlock the first scenario by default
+            } else {
+                gameProgressManager.isScenarioCompleted(nickname, previousScenario.scenarioName) { isCompleted ->
+                    scenario.isUnlocked = isCompleted
+                    scenarioAdapter.notifyItemChanged(i) // Notify RecyclerView of changes
+                }
+            }
         }
     }
+
+
+
 
     private fun getScenariosByDifficulty(difficulty: Difficulty): List<EmergencyScenario> {
         return emergencyScenarios.filter { it.difficulty == difficulty }
@@ -74,7 +95,8 @@ class ScenarioListActivity : AppCompatActivity() {
     private fun resetProgress() {
         gameProgressManager.resetProgress()
         showMessage("All scenarios have been reset.")
-        unlockScenariosProgressively()
+        val nickname = intent.getStringExtra("nickname") ?: ""
+        unlockScenariosProgressively(nickname)
         scenarioAdapter.notifyDataSetChanged()
     }
 
