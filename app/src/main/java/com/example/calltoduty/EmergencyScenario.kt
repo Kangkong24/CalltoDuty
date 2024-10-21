@@ -12,7 +12,9 @@ enum class Difficulty{
 data class EmergencyScenario(
     val difficulty: Difficulty,
     val scenarioName: String,
-    var steps: MutableList<Dialogue>
+    var steps: MutableList<Dialogue>,
+    var isCompleted: Boolean = false,
+    var isUnlocked: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         Difficulty.valueOf(parcel.readString()!!),
@@ -46,18 +48,21 @@ data class Dialogue(
     val message: String,
     val textOptions: List<String>? = null,
     val imageOptions: List<Int>? = null,
-    val correctOption: Set<Int>,
+    val correctOption: Set<Int>? = null,
     val responseMessages: Map<Int, String>? = null // New field for follow-up messages
 ) : Parcelable {
+    init {
+        // Validation to ensure that correctOption is only provided when imageOptions is not null
+        if (correctOption != null && imageOptions == null) {
+            throw IllegalArgumentException("correctOption can only be set when imageOptions are provided.")
+        }
+    }
+
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.createStringArrayList(),
         parcel.createIntArray()?.toList(),
-        mutableSetOf<Int>().apply {
-            val list = mutableListOf<Int>()
-            parcel.readList(list, Int::class.java.classLoader)
-            addAll(list)
-        },
+        parcel.createIntArray()?.toSet(),
         mutableMapOf<Int, String>().apply {
             parcel.readMap(this, Int::class.java.classLoader)
         }
@@ -67,7 +72,7 @@ data class Dialogue(
         parcel.writeString(message)
         parcel.writeStringList(textOptions)
         parcel.writeIntArray(imageOptions?.toIntArray())
-        parcel.writeList(correctOption.toList())
+        parcel.writeIntArray(correctOption?.toIntArray())
         parcel.writeMap(responseMessages)
     }
 
@@ -96,7 +101,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a distressed female voice.",
                 textOptions = listOf("Where are you?", "What happened?", "What is your location?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "I am at home, hiding in my closet.",
                     1 to "Someone broke into my house!",
@@ -108,7 +112,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "", // This will be filled in dynamically
                 textOptions = listOf("Stay quiet", "Run", "Scream"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes officer trying my best to be quiet",
                     1 to "I don't think if that's a smart move?",
@@ -118,7 +121,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Are you hurt?", "What is your location?", "Stay on the line."),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "No, not yet.. ",
                     1 to "I'm at 123 Elm Street.",
@@ -128,7 +130,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Are you alone?", "Stay calm", "Okay i'm sending the police"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "Yes, i'm alone",
                     1 to "I'm at 123 Elm Street.",
@@ -150,7 +151,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a concerned parent about a missing child.",
                 textOptions = listOf("How old is your child?", "When did they go missing?", "What are they wearing?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "They are 5 years old.",
                     1 to "They went missing about an hour ago.",
@@ -160,7 +160,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Where did you last see them?", "Have you called anyone else?", "Can you describe them?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I last saw them near the park.",
                     1 to "No, I haven’t called anyone else yet.",
@@ -170,7 +169,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay calm, we are sending help.", "Keep searching, and we’ll assist.", "Can you wait at the park?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "Okay, I’ll try to stay calm.",
                     1 to "Yes, I'll keep looking for them.",
@@ -180,7 +178,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay calm, we are sending help.", "Keep searching, and we’ll assist.", "Can you wait at the park?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "Okay, I’ll try to stay calm.",
                     1 to "Yes, I'll keep looking for them.",
@@ -203,7 +200,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call reporting a car accident on a busy highway.",
                 textOptions = listOf("Is anyone injured?", "Where exactly did it happen?", "How many cars are involved?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, someone is unconscious and bleeding.",
                     1 to "It happened near Exit 23 on the highway.",
@@ -213,7 +209,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you describe the vehicles?", "Is anyone else hurt?", "Have the authorities been notified?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "One is a black sedan and the other is a red SUV.",
                     1 to "Yes, another person has minor injuries but is conscious.",
@@ -223,7 +218,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("We are dispatching emergency services.", "Can you try to move the injured?", "Stay calm, help is on the way."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Thank you, I'll wait for them.",
                     1 to "I'll try, but it’s difficult.",
@@ -233,7 +227,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Please ensure everyone stays away from traffic.", "Can you wave down passing cars for help?", "Check the injured person’s breathing."),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "Yes, I'll keep them away from traffic.",
                     1 to "I'll try waving for help.",
@@ -255,7 +248,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a passerby reporting a suspicious car parked outside a local store.",
                 textOptions = listOf("What does the car look like?", "Where is it parked?", "Have you seen anyone near it?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "It's a red sedan with tinted windows.",
                     1 to "It's parked in the lot right in front of the store.",
@@ -265,7 +257,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("How long has it been there?", "Are the doors locked?", "Is it running?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "It’s been there for about an hour.",
                     1 to "I can’t tell, but it doesn't look like anyone is inside.",
@@ -275,7 +266,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you take a picture of the car?", "Stay near the store in case someone comes back.", "What makes you think it’s suspicious?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "I can try, but I don’t want to get too close.",
                     1 to "I’ll stay close but out of sight.",
@@ -285,7 +275,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("I will send the a officer to check it.", "Wait a bit longer to see if someone arrives.", "Try to find the owner nearby."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Okay, Thank you.",
                     1 to "I don’t want to take any chances.",
@@ -307,7 +296,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a resident who reports seeing a suspicious person lurking around their neighborhood.",
                 textOptions = listOf("What is the person doing?", "Can you describe the person?", "Have they approached anyone?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "They’re just walking around, looking at houses.",
                     1 to "The person is wearing a hoodie and has a backpack.",
@@ -317,7 +305,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Where are you right now?", "How long has the person been there?", "Do they seem dangerous?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "I’m inside my house, watching from the window.",
                     1 to "They’ve been around for about 10 minutes.",
@@ -327,7 +314,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Do you see any police nearby?", "Is the person moving closer to your home?", "Can you stay inside and keep an eye on them?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "No, I don’t see any police.",
                     1 to "No, they’re staying on the street.",
@@ -337,7 +323,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Keep watching from a safe distance.", "Try to talk to the person.", "Can you check with your neighbors?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll keep watching, but it’s making me nervous.",
                     1 to "I don’t think I should talk to them.",
@@ -347,7 +332,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("We are sending someone to check it out.", "Stay calm, and don’t approach the person.", "Make sure all your doors are locked."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Okay, I’ll wait for the police to come.",
                     1 to "I’ll stay calm and stay inside.",
@@ -371,7 +355,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call about a fire breaking out in a house.",
                 textOptions = listOf("Where are you?", "Is anyone inside?", "What caused the fire?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "I'm at 456 Maple Street.",
                     1 to "Yes, my family is still inside!",
@@ -381,7 +364,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can they get out?", "Stay calm, help is on the way.", "Do you have a fire extinguisher?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "No, they are trapped on the second floor.",
                     1 to "I’m trying to stay calm, but it’s spreading fast!",
@@ -391,7 +373,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you see the fire?", "Break a window!", "Is anyone injured?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "The fire is blocking the stairs.",
                     1 to "I can't get close enough to help.",
@@ -413,7 +394,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call reporting a bomb threat at a local school.",
                 textOptions = listOf("Where is the bomb?", "Who made the threat?", "Is the school being evacuated?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "We don't know the exact location!",
                     1 to "We received an anonymous call about the bomb.",
@@ -423,7 +403,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Are the authorities informed?", "Where are the students being evacuated?", "How long until the bomb goes off?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "The police and bomb squad are on their way.",
                     1 to "We’re sending them to the football field.",
@@ -433,7 +412,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay calm, help is on the way.", "Clear the nearby area!", "Do you have any details about the bomb?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "We are trying, but people are panicking.",
                     1 to "We're clearing the area around the school.",
@@ -443,7 +421,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you describe the backpack?", "Has anyone suspicious been spotted?", "How many students are left in the building?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "It's black with a logo, but we're not sure.",
                     1 to "Someone saw a person in a hoodie drop something and run.",
@@ -465,7 +442,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a resident reporting a wildfire approaching their neighborhood.",
                 textOptions = listOf("How close is the fire?", "What do you see around you?", "Have you evacuated anyone yet?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "It looks like it’s about a mile away, and the smoke is getting thicker.",
                     1 to "I see flames in the distance and lots of smoke.",
@@ -475,7 +451,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Do you have a safe route to evacuate?", "Are there any animals that need to be evacuated?", "Have you contacted your neighbors?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, there’s a road to the east that should be safe.",
                     1 to "I have a dog, but I can’t find him.",
@@ -485,7 +460,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Gather important items and leave now.", "Call your neighbors to warn them.", "Try to get your dog before leaving."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll start packing important things.",
                     1 to "I need to warn them about the fire.",
@@ -495,7 +469,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Is the fire spreading quickly?", "Can you see any emergency vehicles?", "Have you checked on your family?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, it seems to be moving towards the neighborhood.",
                     1 to "No, I haven’t seen any help yet.",
@@ -505,7 +478,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay calm, help is on the way.", "Keep your doors and windows closed.", "Make sure you have your phone charged."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m trying to stay calm, but I’m really scared.",
                     1 to "I’ll close everything tight.",
@@ -527,7 +499,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a panicked person who has accidentally stabbed themselves while cooking.",
                 textOptions = listOf("Where did you stab yourself?", "How deep is the wound?", "Are you able to apply pressure?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I stabbed my hand with a kitchen knife.",
                     1 to "It’s bleeding a lot, but I think it’s not too deep.",
@@ -537,7 +508,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you see any bone or muscle?", "How long ago did this happen?", "Are you feeling dizzy or faint?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "No, I can’t see anything like that.",
                     1 to "It happened about 10 minutes ago.",
@@ -547,7 +517,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Keep applying pressure to the wound.", "Try to elevate your hand above your heart.", "Are you alone at home?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m doing that, but the bleeding won’t stop.",
                     1 to "Yes, I’m by myself.",
@@ -557,7 +526,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Do you have a clean cloth or bandage?", "Have you called anyone for help?", "What’s your address?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I have a dish towel I can use.",
                     1 to "No, I just called you.",
@@ -567,7 +535,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay calm; help is on the way.", "Keep pressure on the wound until help arrives.", "Don't remove the knife if it’s still in. Is it?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m trying to stay calm, but it’s hard.",
                     1 to "The knife is out; I’m just pressing on the cut.",
@@ -589,7 +556,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a person whispering, saying they are in danger from a violent partner.",
                 textOptions = listOf("Are you safe at the moment?", "Can you leave the house?", "Where is your partner now?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m hiding in the bathroom, but I don’t feel safe.",
                     1 to "No, I can’t leave. I’m scared they will find me.",
@@ -599,7 +565,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay quiet and keep the door locked.", "Can you call for help?", "Can you describe your partner?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ve locked the door, but I’m not sure how long I can stay here.",
                     1 to "I don’t want to call anyone; they might hear.",
@@ -609,7 +574,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you find a way to leave safely?", "Have they hurt you before?", "Can you stay hidden until help arrives?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "I don’t think I can get out without being seen.",
                     1 to "Yes, this has happened before.",
@@ -619,7 +583,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay hidden and don’t make any noise.", "Can you barricade the door?", "Do you have anyone nearby you can contact?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll stay as quiet as I can.",
                     1 to "I’ve pushed something against the door.",
@@ -629,7 +592,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("We are sending help right away.", "Stay calm, the police are on their way.", "Try to stay on the line until help arrives."),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "Thank you, I’m so scared.",
                     1 to "I’ll stay quiet and wait for them.",
@@ -653,7 +615,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a terrified store clerk reporting an armed robbery in progress.",
                 textOptions = listOf("Where are you right now?", "Can you describe the robber?", "Have they hurt anyone?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I'm hiding in the back room, I can hear them in the store.",
                     1 to "They’re wearing a black hoodie and have a gun.",
@@ -663,7 +624,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay hidden and keep quiet.", "Can you see how many robbers there are?", "Have you locked the door?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Okay, I’ll stay as quiet as possible.",
                     1 to "There’s just one person, I think.",
@@ -673,7 +633,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you give me the store’s address?", "Try to watch what's happening.", "Stay calm, help is on the way."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "The address is 456 Main Street.",
                     1 to "I can’t see anything from here.",
@@ -683,7 +642,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Are there any security cameras?", "Is the robber still in the store?", "Can you leave the back room?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "Yes, but I don't know how to access them.",
                     1 to "I can still hear them, so yes, they’re still here.",
@@ -693,7 +651,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay where you are until the police arrive.", "Can you text someone for help?", "Try to create a distraction."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Okay, I’ll stay hidden until they get here.",
                     1 to "I’ve already texted my boss, but they haven’t replied.",
@@ -717,7 +674,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a panicked person reporting that they are being held hostage.",
                 textOptions = listOf("How many hostages are there?", "Can you describe the captors?", "Where are you located?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "There are three of us being held.",
                     1 to "There are two men, both armed with guns.",
@@ -727,7 +683,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Are you in immediate danger?", "Can you stay on the phone?", "What do they want?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, they’re threatening to hurt us if their demands aren’t met.",
                     1 to "I don’t think I can stay on the phone for long.",
@@ -737,7 +692,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Try to stay calm, help is on the way.", "Can you hide or escape?", "Can you negotiate with them?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll try, but I’m really scared.",
                     1 to "There’s nowhere to hide, and I can’t escape.",
@@ -747,7 +701,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you describe the room you're in?", "Do they know you have a phone?", "Are the other hostages okay?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "We’re in a small office room with no windows.",
                     1 to "No, they don’t know I’m on the phone. I’m hiding it.",
@@ -757,7 +710,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay hidden and keep the phone silent.", "Try to talk to the captors.", "Can you signal anyone outside?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll stay quiet and keep the phone on silent.",
                     1 to "I don’t want to risk it, they’re very aggressive.",
@@ -779,7 +731,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from someone reporting that they believe a stalker is outside their home.",
                 textOptions = listOf("Are you sure it's a stalker?", "Can you see them now?", "Where are you located?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "Yes, they’ve been following me for weeks.",
                     1 to "Yes, they’re standing across the street, just watching.",
@@ -789,7 +740,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay inside and lock all doors.", "Confront them to see what they want.", "Can you take a picture for evidence?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ve already locked everything, I’m scared.",
                     1 to "No, I’m too terrified to confront them.",
@@ -799,7 +749,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Have they tried to enter your home?", "Have you seen them before?", "Can you call a neighbor for help?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "No, but they’re always around, watching me.",
                     1 to "Yes, I’ve seen them around my work and neighborhood before.",
@@ -809,7 +758,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Turn off all the lights and stay hidden.", "Can you go to a safer room?", "Yell to scare them off."),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "I already have the lights off, they don’t know I’m home.",
                     1 to "Okay, I’m moving to my bedroom and locking the door.",
@@ -819,7 +767,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Wait for the police to arrive.", "Can you call someone to stay with you?", "Keep watching the stalker’s movements."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m waiting, please send help quickly!",
                     1 to "I’ll call a friend now.",
@@ -841,7 +788,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a terrified student reporting a shooting at their school.",
                 textOptions = listOf("Are you safe right now?", "How many people are involved?", "Where are you in the school?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’m hiding in a classroom, but I can hear shots.",
                     1 to "I think there are at least two shooters.",
@@ -851,7 +797,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you lock the classroom door?", "Are there any teachers with you?", "Have you called anyone else?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, we locked the door as soon as we heard.",
                     1 to "Yes, my teacher is with us, trying to keep everyone calm.",
@@ -861,7 +806,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay quiet and keep your phone on silent.", "Can you find a safe exit?", "Is there a way to barricade the door?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "We’re all trying to stay quiet.",
                     1 to "I don’t want to move; it feels too dangerous.",
@@ -871,7 +815,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Have you heard any updates from outside?", "Are there any windows you can look out of?", "Can you describe what you hear?"),
-                correctOption = setOf(1),
                 responseMessages = mapOf(
                     0 to "No, we can’t hear anything outside.",
                     1 to "There’s a window, but I’m too scared to look.",
@@ -881,7 +824,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Stay on the line with me until help arrives.", "Can you text someone for help?", "Try to stay calm; help is coming."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll stay on the line. Please hurry!",
                     1 to "I’ll try, but my hands are shaking.",
@@ -903,7 +845,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "You receive a call from a bystander reporting a serious truck accident on the highway.",
                 textOptions = listOf("Are there any injuries?", "How many vehicles are involved?", "Where are you located?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, there are people injured, and one person is trapped.",
                     1 to "It looks like three vehicles are involved, including the truck.",
@@ -913,7 +854,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Can you see any flames or smoke?", "Is there anyone helping the injured?", "Are there any signs of a fuel leak?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "Yes, there’s a small fire starting near the truck.",
                     1 to "No, people are just standing around, unsure of what to do.",
@@ -923,7 +863,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Move to a safer location if possible.", "Is the driver of the truck responsive?", "Can you get a closer look at the injured?"),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll move further away from the road.",
                     1 to "I can’t tell; they seem unconscious.",
@@ -933,7 +872,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Have you called 911?", "What injuries do you see?", "Can you help the trapped person?"),
-                correctOption = setOf(2),
                 responseMessages = mapOf(
                     0 to "Yes, I called them right after I saw the accident.",
                     1 to "There’s blood, and one person is clearly in shock.",
@@ -943,7 +881,6 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 textOptions = listOf("Keep your distance until professionals arrive.", "Try to calm the other bystanders.", "Gather any information about the accident."),
-                correctOption = setOf(0),
                 responseMessages = mapOf(
                     0 to "I’ll stay back and wait for help.",
                     1 to "No one seems to be listening to me.",

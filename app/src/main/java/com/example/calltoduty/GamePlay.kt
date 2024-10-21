@@ -1,6 +1,7 @@
 package com.example.calltoduty
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -22,7 +23,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     private val timeLimit: Long = 15000 // 15 seconds per question
     //private lateinit var messageTextView: TextView
 
-
+    private lateinit var gameProgressManager: GameProgressManager
     private lateinit var responseAdapter: ResponseAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var optionButton1: Button
@@ -35,7 +36,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     private var score: Int = 0
     private var wrongChoices: Int = 0
-    private val maxWrongChoices = 4
+    private val maxWrongChoices = 1
 
     private val previousResponses: MutableList<Pair<Boolean, String>> = mutableListOf()
 
@@ -52,7 +53,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_play)
 
-
+        gameProgressManager = GameProgressManager(this)
         // Initialize UI components
         recyclerView = findViewById(R.id.recyclerView)
         optionButton1 = findViewById(R.id.optionButton1)
@@ -106,7 +107,6 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         super.onStop()
         stopSound("gameplay_sound")  // Stop the gameplay sound when the activity is no longer visible
     }
-
 
 
     // Initialize game state
@@ -249,12 +249,17 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         previousResponses.add(Pair(false, chosenOptionText))
         responseAdapter.notifyItemInserted(previousResponses.size - 1)
 
-        if (currentDialogue.correctOption.contains(choice)) {
-            score++
-            showMessage("Correct! You've handled it well.")
+        if (currentDialogue.correctOption != null) {
+            if (currentDialogue.correctOption.contains(choice)) {
+                score++
+                showMessage("Correct! You've handled it well.")
+            } else {
+                wrongChoices++
+                showMessage("Incorrect! The correct response was one of: ${currentDialogue.correctOption.map { it + 1 }}")
+            }
         } else {
-            wrongChoices++
-            showMessage("Incorrect! The correct response was one of: ${currentDialogue.correctOption.map { it + 1 }}")
+            // Handle text-based options where no correctOption is defined
+            showMessage("No correct answer for this dialogue step.")
         }
 
         if (wrongChoices >= maxWrongChoices) {
@@ -306,7 +311,9 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     private fun endGame(success: Boolean) {
         if (success) {
+            gameProgressManager.markScenarioAsCompleted(chosenEmergencyScenario!!.scenarioName)
             showMessage("You successfully helped the caller. Your score: $score")
+            //saveCompletedScenario(chosenEmergencyScenario!!)
             val successFragment = SuccessFragment.newInstance("param1", "param2")
             successFragment.show(supportFragmentManager, "successFragment")
         } else {
@@ -315,5 +322,6 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             failedFragment.show(supportFragmentManager, "failedFragment")
         }
     }
+
 
 }
