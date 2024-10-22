@@ -3,7 +3,6 @@ package com.example.calltoduty
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.ResponseBody
@@ -31,7 +30,6 @@ class DeletionPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deletion_page)
 
-
         yesButton = findViewById(R.id.yesButton)
         noButton = findViewById(R.id.noButton)
 
@@ -45,22 +43,18 @@ class DeletionPage : AppCompatActivity() {
 
         yesButton.setOnClickListener {
             // Use the oldNickname for deletion
-            if (oldNickname.isNotEmpty()) {
-                deleteAccount(oldNickname)
-            } else if (signUpNN.isNotEmpty()) {
-                deleteAccount(signUpNN)
-            } else if (updatedNickname.isNotEmpty()) {
-                deleteAccount(updatedNickname)
-            } else {
-                Toast.makeText(this, "Nickname is not set.", Toast.LENGTH_SHORT).show()
+            when {
+                oldNickname.isNotEmpty() -> deleteAccount(oldNickname)
+                signUpNN.isNotEmpty() -> deleteAccount(signUpNN)
+                updatedNickname.isNotEmpty() -> deleteAccount(updatedNickname)
+                else -> Toast.makeText(this, "Nickname is not set.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
     private fun deleteAccount(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/delete.php/") // Change to your device's IP
+            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -71,6 +65,7 @@ class DeletionPage : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@DeletionPage, "Account deleted", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@DeletionPage, SignUpScreen::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear previous activities
                     startActivity(intent)
                 } else {
                     Toast.makeText(this@DeletionPage, "Deletion failed", Toast.LENGTH_SHORT).show()

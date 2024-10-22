@@ -35,10 +35,8 @@ class LoginPage : AppCompatActivity() {
         nickNameInput = findViewById(R.id.nn_input)
         enterButton = findViewById(R.id.enterButton)
 
-
-
         enterButton.setOnClickListener {
-            val nickname = nickNameInput.text.toString()
+            val nickname = nickNameInput.text.toString().trim() // Trim whitespace
 
             if (nickname.isNotEmpty()) {
                 checkLogin(nickname)
@@ -50,26 +48,37 @@ class LoginPage : AppCompatActivity() {
 
     private fun checkLogin(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") // Change to your device's IP
+            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val apiService = retrofit.create(ApiServiceLogin::class.java)
 
+        Log.d("LoginAttempt", "Attempting to login with nickname: $nickname")
+
         apiService.login(nickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.d("Response Code", "Response Code: ${response.code()}") // Log response code
+
                 if (response.isSuccessful) {
                     val responseBody = response.body()?.string()
                     Log.d("LoginResponse", responseBody ?: "null")
 
-                    if (responseBody?.trim() == "Login successful") {
-                        // Pass current nickname to the next screen
-                        Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@LoginPage, MainActivity::class.java)
-                        intent.putExtra("currentNickname", nickname)
-                        startActivity(intent)
+                    // Check if responseBody is not null and contains expected string
+                    if (responseBody != null) {
+                        val trimmedResponse = responseBody.trim()
+                        Log.d("Trimmed Response", trimmedResponse)
+
+                        if (trimmedResponse == "Login successful") {
+                            Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@LoginPage, MainActivity::class.java)
+                            intent.putExtra("currentNickname", nickname)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this@LoginPage, "Nickname not found", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        Toast.makeText(this@LoginPage, "Nickname not found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginPage, "Empty response from server", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(this@LoginPage, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
@@ -81,4 +90,5 @@ class LoginPage : AppCompatActivity() {
             }
         })
     }
+
 }

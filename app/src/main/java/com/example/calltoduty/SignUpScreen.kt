@@ -29,8 +29,6 @@ interface ApiServiceSignUp {
 
 class SignUpScreen : AppCompatActivity() {
 
-
-
     private lateinit var nickNameInput: EditText
     private lateinit var createBtn: Button
     private lateinit var alreadyTv: TextView
@@ -52,11 +50,11 @@ class SignUpScreen : AppCompatActivity() {
                 Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
-        //temporary
-        alreadyTv.setOnClickListener{
+
+        // Temporary
+        alreadyTv.setOnClickListener {
             val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
-
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -68,12 +66,11 @@ class SignUpScreen : AppCompatActivity() {
 
     private fun sendSignupData(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") //Device IP
+            .baseUrl("http://192.168.1.61/rest_api/") // Device IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val apiService = retrofit.create(ApiServiceSignUp::class.java)
-
 
         apiService.signup(nickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -86,6 +83,7 @@ class SignUpScreen : AppCompatActivity() {
                         Toast.makeText(this@SignUpScreen, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpScreen, MainActivity::class.java)
                         intent.putExtra("signUp_nickname", nickname) // Pass the nickname as current nickname
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear previous activities
                         startActivity(intent)
                     }
                 } else {
@@ -103,5 +101,4 @@ class SignUpScreen : AppCompatActivity() {
             }
         })
     }
-
 }
