@@ -38,17 +38,18 @@ class LoginPage : AppCompatActivity() {
         enterButton.setOnClickListener {
             val nickname = nickNameInput.text.toString().trim() // Trim whitespace
 
-            if (nickname.isNotEmpty()) {
+            // Check if nickname is not empty and doesn't contain spaces
+            if (nickname.isNotEmpty() && !nickname.contains(" ")) {
                 checkLogin(nickname)
             } else {
-                Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Nickname cannot be empty or contain spaces", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun checkLogin(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.1.61/rest_api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -64,18 +65,30 @@ class LoginPage : AppCompatActivity() {
                     val responseBody = response.body()?.string()
                     Log.d("LoginResponse", responseBody ?: "null")
 
-                    // Check if responseBody is not null and contains expected string
+                    // Check the response from the server (plain string)
                     if (responseBody != null) {
                         val trimmedResponse = responseBody.trim()
                         Log.d("Trimmed Response", trimmedResponse)
 
-                        if (trimmedResponse == "Login successful") {
-                            Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@LoginPage, MainActivity::class.java)
-                            intent.putExtra("currentNickname", nickname)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(this@LoginPage, "Nickname not found", Toast.LENGTH_SHORT).show()
+                        when (trimmedResponse) {
+                            "Login successful" -> {
+                                Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@LoginPage, MainActivity::class.java)
+                                intent.putExtra("currentNickname", nickname)
+                                startActivity(intent)
+                            }
+                            "User not found" -> {
+                                Toast.makeText(this@LoginPage, "Nickname not found", Toast.LENGTH_SHORT).show()
+                            }
+                            "No progress found for user" -> {
+                                Toast.makeText(this@LoginPage, "No progress found", Toast.LENGTH_SHORT).show()
+                            }
+                            "Nickname cannot be empty or contain spaces" -> {
+                                Toast.makeText(this@LoginPage, "Invalid nickname", Toast.LENGTH_SHORT).show()
+                            }
+                            else -> {
+                                Toast.makeText(this@LoginPage, "Unknown response from server", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         Toast.makeText(this@LoginPage, "Empty response from server", Toast.LENGTH_SHORT).show()
@@ -90,5 +103,4 @@ class LoginPage : AppCompatActivity() {
             }
         })
     }
-
 }

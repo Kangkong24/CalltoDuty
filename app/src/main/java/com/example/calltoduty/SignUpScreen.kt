@@ -42,16 +42,16 @@ class SignUpScreen : AppCompatActivity() {
         alreadyTv = findViewById(R.id.already_tv)
 
         createBtn.setOnClickListener {
-            val nickname = nickNameInput.text.toString()
+            val nickname = nickNameInput.text.toString().trim()
 
-            if (nickname.isNotEmpty()) {
+            // Check if nickname is not empty and doesn't contain spaces
+            if (nickname.isNotEmpty() && !nickname.contains(" ")) {
                 sendSignupData(nickname)
             } else {
-                Toast.makeText(this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Nickname cannot be empty or contain spaces", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Temporary
         alreadyTv.setOnClickListener {
             val intent = Intent(this, LoginPage::class.java)
             startActivity(intent)
@@ -82,8 +82,8 @@ class SignUpScreen : AppCompatActivity() {
                         Toast.makeText(this@SignUpScreen, "Signup Successful!", Toast.LENGTH_SHORT).show()
                         Toast.makeText(this@SignUpScreen, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@SignUpScreen, MainActivity::class.java)
-                        intent.putExtra("signUp_nickname", nickname) // Pass the nickname as current nickname
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear previous activities
+                        intent.putExtra("signUp_nickname", nickname)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                     }
                 } else {

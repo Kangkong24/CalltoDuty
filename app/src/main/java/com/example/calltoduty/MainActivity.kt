@@ -26,9 +26,10 @@ class MainActivity : AppCompatActivity() {
         MusicManager.initialize(this, "bg_music", R.raw.bg_music, loop = true, volume = -5.0f)
         MusicManager.startSound("bg_music")
 
-        val currentNickname = intent.getStringExtra("currentNickname") // Get the current nickname
+        // Get the current nickname
         val signUpNN = intent.getStringExtra("signUp_nickname")
         val updatedNickname = intent.getStringExtra("updatedNickname")
+        val currentNickname = intent.getStringExtra("currentNickname")
 
         playButton.setOnClickListener{
             val intent = Intent(this, GameDifficulty::class.java)

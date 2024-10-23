@@ -48,12 +48,13 @@ class ChangeNicknamePage : AppCompatActivity() {
         }
 
         changeButton.setOnClickListener {
-            val newNickname = nicknameInput.text.toString()
+            val newNickname = nicknameInput.text.toString().trim()
 
-            if (newNickname.isNotEmpty()) {
+            if (newNickname.isNotEmpty() && !newNickname.contains(" ")) {
                 updateNickname(oldNickname, newNickname)
+                updateNickname(signUpNN, newNickname)
             } else {
-                Toast.makeText(this, "New nickname cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "New nickname cannot be empty or contain spaces", Toast.LENGTH_SHORT).show()
             }
         }
     }
