@@ -54,7 +54,7 @@ class DeletionPage : AppCompatActivity() {
 
     private fun deleteAccount(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.100.16/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

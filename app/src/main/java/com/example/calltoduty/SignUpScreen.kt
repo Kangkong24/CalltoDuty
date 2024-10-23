@@ -1,7 +1,9 @@
 package com.example.calltoduty
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -66,12 +68,10 @@ class SignUpScreen : AppCompatActivity() {
 
     private fun sendSignupData(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Device IP
+            .baseUrl("http://192.168.100.16/") // Device IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val apiService = retrofit.create(ApiServiceSignUp::class.java)
-
         apiService.signup(nickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
@@ -81,6 +81,12 @@ class SignUpScreen : AppCompatActivity() {
                     } else {
                         Toast.makeText(this@SignUpScreen, "Signup Successful!", Toast.LENGTH_SHORT).show()
                         Toast.makeText(this@SignUpScreen, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
+
+                        // Save the nickname to SharedPreferences
+                        val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
+                        sharedPreferences.edit().putString("nickname", nickname).apply()
+                        Log.d("saveNickname", "Nickname saved: $nickname")
+
                         val intent = Intent(this@SignUpScreen, MainActivity::class.java)
                         intent.putExtra("signUp_nickname", nickname)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -101,4 +107,5 @@ class SignUpScreen : AppCompatActivity() {
             }
         })
     }
+
 }

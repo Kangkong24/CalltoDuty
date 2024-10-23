@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -14,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.calltoduty.MusicManager.stopSound
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -58,9 +61,13 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         enableEdgeToEdge()
         setContentView(R.layout.activity_game_play)
 
+
+        val gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.100.16/") // Change to your server's base URL
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
         // Create an instance of ApiService
@@ -326,34 +333,33 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     private fun endGame(success: Boolean) {
         chosenEmergencyScenario?.let { scenario ->
-            // Retrieve the nickname from SharedPreferences
             val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
             val nickname = sharedPreferences.getString("nickname", "") ?: ""
+            Log.d("retrieveNickname", "Nickname retrieved: $nickname")
 
             if (nickname.isNotEmpty()) {
                 if (success) {
-                    // Mark the scenario as completed
                     gameProgressManager.markScenarioAsCompleted(nickname, scenario.scenarioName)
                     showMessage("You successfully helped the caller. Your score: $score")
-
-                    // Show the success fragment
                     val successFragment = SuccessFragment.newInstance("param1", "param2")
                     successFragment.show(supportFragmentManager, "successFragment")
+                    Log.d("endGame", "Showing SuccessFragment")
                 } else {
-                    // Game over scenario
                     showMessage("Game over - Too many wrong responses. Your score: $score")
-
-                    // Show the failed fragment
                     val failedFragment = FailedFragment.newInstance("param1", "param2")
                     failedFragment.show(supportFragmentManager, "failedFragment")
+                    Log.d("endGame", "Showing FailedFragment")
                 }
             } else {
                 showMessage("Error: Nickname is empty")
+                Log.d("endGame", "Nickname is empty")
             }
         } ?: run {
             showMessage("Error: Scenario not selected")
+            Log.d("endGame", "Scenario not selected")
         }
     }
+
 
 
 

@@ -2,6 +2,7 @@ package com.example.calltoduty
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -61,7 +62,7 @@ class ChangeNicknamePage : AppCompatActivity() {
 
     private fun updateNickname(oldNickname: String, newNickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/") // Change to your device's IP
+            .baseUrl("http://192.168.100.16/") // Change to your device's IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -70,10 +71,11 @@ class ChangeNicknamePage : AppCompatActivity() {
         apiService.updateNickname(oldNickname, newNickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body()?.string()
+                    val responseBody = response.body()?.string()?.trim()
+                    Log.d("ChangeNicknamePage", "Response Body: $responseBody")
                     if (responseBody == "Nickname updated successfully") {
                         Toast.makeText(this@ChangeNicknamePage, "Nickname updated", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@ChangeNicknamePage, OptionScreen::class.java)
+                        val intent = Intent(this@ChangeNicknamePage, OptionFragment::class.java)
                         intent.putExtra("updatedNickname", newNickname)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear previous activities
                         startActivity(intent)

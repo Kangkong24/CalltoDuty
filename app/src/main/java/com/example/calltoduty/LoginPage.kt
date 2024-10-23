@@ -1,5 +1,6 @@
 package com.example.calltoduty
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -49,30 +50,29 @@ class LoginPage : AppCompatActivity() {
 
     private fun checkLogin(nickname: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.61/rest_api/")
+            .baseUrl("http://192.168.100.16/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val apiService = retrofit.create(ApiServiceLogin::class.java)
-
         Log.d("LoginAttempt", "Attempting to login with nickname: $nickname")
 
         apiService.login(nickname).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Log.d("Response Code", "Response Code: ${response.code()}") // Log response code
-
                 if (response.isSuccessful) {
                     val responseBody = response.body()?.string()
                     Log.d("LoginResponse", responseBody ?: "null")
-
-                    // Check the response from the server (plain string)
                     if (responseBody != null) {
                         val trimmedResponse = responseBody.trim()
                         Log.d("Trimmed Response", trimmedResponse)
-
                         when (trimmedResponse) {
                             "Login successful" -> {
                                 Toast.makeText(this@LoginPage, "Hi, $nickname!", Toast.LENGTH_SHORT).show()
+                                // Save the nickname to SharedPreferences
+                                val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
+                                sharedPreferences.edit().putString("nickname", nickname).apply()
+                                Log.d("saveNickname", "Nickname saved: $nickname")
+
                                 val intent = Intent(this@LoginPage, MainActivity::class.java)
                                 intent.putExtra("currentNickname", nickname)
                                 startActivity(intent)
@@ -103,4 +103,5 @@ class LoginPage : AppCompatActivity() {
             }
         })
     }
+
 }

@@ -1,12 +1,17 @@
 package com.example.calltoduty
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,19 +25,21 @@ class ScenarioListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scenario_list)
 
+        val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
+        val nickname = sharedPreferences.getString("nickname", "") ?: ""
+        Log.d("retrieveNickname", "Nickname retrieved in ScenarioListActivity: $nickname")
+
+        // Rest of your setup code
         initViews()
         setupGameProgressManager()
         loadScenarios()
         setupRecyclerView()
-        val nickname = intent.getStringExtra("nickname") ?: ""
         unlockScenariosProgressively(nickname)
-
-        
-        // Set up reset button listener
         findViewById<Button>(R.id.reset_btn).setOnClickListener {
             resetProgress()
         }
     }
+
 
     private fun initViews() {
         recyclerView = findViewById(R.id.recyclerViewScenarios)
@@ -40,12 +47,14 @@ class ScenarioListActivity : AppCompatActivity() {
     }
 
     private fun setupGameProgressManager() {
+        val gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
         val apiService = Retrofit.Builder()
             .baseUrl("http://192.168.100.16/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)
-
         gameProgressManager = GameProgressManager(this, apiService)
     }
 
@@ -73,7 +82,6 @@ class ScenarioListActivity : AppCompatActivity() {
         for (i in scenarios.indices) {
             val scenario = scenarios[i]
             val previousScenario = if (i > 0) scenarios[i - 1] else null
-
             if (previousScenario == null) {
                 scenario.isUnlocked = true // Unlock the first scenario by default
             } else {
@@ -84,9 +92,6 @@ class ScenarioListActivity : AppCompatActivity() {
             }
         }
     }
-
-
-
 
     private fun getScenariosByDifficulty(difficulty: Difficulty): List<EmergencyScenario> {
         return emergencyScenarios.filter { it.difficulty == difficulty }

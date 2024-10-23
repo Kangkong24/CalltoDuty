@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class ScenarioAdapter(
@@ -31,17 +30,13 @@ class ScenarioAdapter(
         fun bind(scenario: EmergencyScenario) {
             scenarioNameTextView.text = scenario.scenarioName
             scenarioDescriptionTextView.text = "Difficulty: ${scenario.difficulty}"
-
-            if (scenario.isUnlocked) {
-                itemView.alpha = 1.0f
-                itemView.isClickable = true
-                itemView.setOnClickListener { onScenarioSelected(scenario) }
-            } else {
-                itemView.alpha = 0.5f
-                itemView.isClickable = false
-                itemView.setOnClickListener(null)
+            itemView.apply {
+                alpha = if (scenario.isUnlocked) 1.0f else 0.5f
+                isClickable = scenario.isUnlocked
+                setOnClickListener {
+                    if (scenario.isUnlocked) onScenarioSelected(scenario)
+                }
             }
         }
     }
 }
-

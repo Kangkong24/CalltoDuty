@@ -2,6 +2,7 @@ package com.example.calltoduty
 
 import android.content.Context
 import android.widget.Toast
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,40 +17,44 @@ interface ApiService {
     fun markScenarioAsCompleted(
         @Field("nickname") nickname: String,
         @Field("scenario_name") scenarioName: String
-    ): Call<String>
+    ): Call<ResponseBody>
 
     @FormUrlEncoded
-    @POST("is_scenario_completed.php") // Endpoint for checking if the scenario is completed
+    @POST("completed_scenario.php") // Endpoint for checking if the scenario is completed
     fun isScenarioCompleted(
         @Field("nickname") nickname: String,
         @Field("scenario_name") scenarioName: String
-    ): Call<String>
+    ): Call<ResponseBody>
 }
 
 // GameProgressManager class to handle game progress
 class GameProgressManager(private val context: Context, private val apiService: ApiService) {
-
     private val sharedPreferences = context.getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
 
     // Save scenario completion locally and mark it on the server
-    fun markScenarioAsCompleted(nickname: String, scenarioName: String) {
+    fun markScenarioAsCompleted(nickname: String, difficulty: String) {
         // Save the completion state locally
-        sharedPreferences.edit().putBoolean(scenarioName, true).apply()
-
+        sharedPreferences.edit().putBoolean(difficulty, true).apply()
         // Make network call to mark it on the server
-        apiService.markScenarioAsCompleted(nickname, scenarioName).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        apiService.markScenarioAsCompleted(nickname, difficulty).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
+                    val responseString = response.body()?.string()
+                    if (responseString?.contains("Completed scenario saved successfully") == true) {
+                        Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Failed to mark scenario as completed", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(context, "Failed to mark scenario as completed", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
     // Check if a scenario is completed locally and from the server
@@ -60,17 +65,22 @@ class GameProgressManager(private val context: Context, private val apiService: 
             callback(true) // Already completed locally
         } else {
             // Make a network call to check if it's completed on the server
-            apiService.isScenarioCompleted(nickname, scenarioName).enqueue(object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    if (response.isSuccessful && response.body() == "true") {
-                        markScenarioAsCompleted(nickname, scenarioName)
-                        callback(true) // Mark as completed if found on server
+            apiService.isScenarioCompleted(nickname, scenarioName).enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        val responseString = response.body()?.string()
+                        if (responseString?.contains("success") == true) {
+                            markScenarioAsCompleted(nickname, scenarioName)
+                            callback(true) // Mark as completed if found on server
+                        } else {
+                            callback(false) // Not completed
+                        }
                     } else {
                         callback(false) // Not completed
                     }
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     callback(false) // Assume not completed if there's a failure
                 }
@@ -78,26 +88,10 @@ class GameProgressManager(private val context: Context, private val apiService: 
         }
     }
 
+
     // Reset all progress
     fun resetProgress() {
         sharedPreferences.edit().clear().apply()
     }
 
-    // Save additional information about scenario completion
-    fun saveScenarioDetails(scenarioName: String, score: Int, completionTime: Long) {
-        sharedPreferences.edit()
-            .putInt("${scenarioName}_score", score)
-            .putLong("${scenarioName}_completionTime", completionTime)
-            .apply()
-    }
-
-    // Get scenario score
-    fun getScenarioScore(scenarioName: String): Int {
-        return sharedPreferences.getInt("${scenarioName}_score", 0)
-    }
-
-    // Get scenario completion time
-    fun getScenarioCompletionTime(scenarioName: String): Long {
-        return sharedPreferences.getLong("${scenarioName}_completionTime", 0L)
-    }
 }
