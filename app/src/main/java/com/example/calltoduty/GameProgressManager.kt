@@ -3,6 +3,7 @@ package com.example.calltoduty
 import android.content.Context
 import android.widget.Toast
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,18 +33,29 @@ class GameProgressManager(private val context: Context, private val apiService: 
     private val sharedPreferences = context.getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
 
     // Save scenario completion locally and mark it on the server
-    fun markScenarioAsCompleted(nickname: String, difficulty: String) {
+    fun markScenarioAsCompleted(nickname: String, scenarioName: String) {
         // Save the completion state locally
-        sharedPreferences.edit().putBoolean(difficulty, true).apply()
+        val key = "${nickname}_$scenarioName"  // Add nickname as a prefix
+        sharedPreferences.edit().putBoolean(key, true).apply()
+
         // Make network call to mark it on the server
-        apiService.markScenarioAsCompleted(nickname, difficulty).enqueue(object : Callback<ResponseBody> {
+        apiService.markScenarioAsCompleted(nickname, scenarioName).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
-                    if (responseString?.contains("Completed scenario saved successfully") == true) {
-                        Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Failed to mark scenario as completed", Toast.LENGTH_SHORT).show()
+                    val jsonResponse = JSONObject(responseString ?: "{}")
+                    val status = jsonResponse.optString("status")
+
+                    when (status) {
+                        "completed_scenario_saved" -> {
+                            Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
+                        }
+                        "already_completed" -> {
+                            Toast.makeText(context, "Scenario was already completed", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Toast.makeText(context, "Failed to mark scenario as completed", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 } else {
                     Toast.makeText(context, "Failed to mark scenario as completed", Toast.LENGTH_SHORT).show()
@@ -54,13 +66,13 @@ class GameProgressManager(private val context: Context, private val apiService: 
                 Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
     }
 
     // Check if a scenario is completed locally and from the server
     fun isScenarioCompleted(nickname: String, scenarioName: String, callback: (Boolean) -> Unit) {
         // Check local progress first
-        val completed = sharedPreferences.getBoolean(scenarioName, false)
+        val key = "${nickname}_$scenarioName"  // Use nickname-specific key
+        val completed = sharedPreferences.getBoolean(key, false)
         if (completed) {
             callback(true) // Already completed locally
         } else {
@@ -69,7 +81,10 @@ class GameProgressManager(private val context: Context, private val apiService: 
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         val responseString = response.body()?.string()
-                        if (responseString?.contains("success") == true) {
+                        val jsonResponse = JSONObject(responseString ?: "{}")
+                        val status = jsonResponse.optString("status")
+
+                        if (status == "already_completed") {
                             markScenarioAsCompleted(nickname, scenarioName)
                             callback(true) // Mark as completed if found on server
                         } else {
@@ -88,10 +103,14 @@ class GameProgressManager(private val context: Context, private val apiService: 
         }
     }
 
-
     // Reset all progress
-    fun resetProgress() {
-        sharedPreferences.edit().clear().apply()
+    fun resetProgress(nickname: String) {
+        val editor = sharedPreferences.edit()
+        sharedPreferences.all.keys
+            .filter { it.startsWith("${nickname}_") }  // Only remove keys for the given nickname
+            .forEach { editor.remove(it) }
+        editor.apply()
     }
+
 
 }

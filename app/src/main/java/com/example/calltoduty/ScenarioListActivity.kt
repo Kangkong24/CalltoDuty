@@ -79,31 +79,49 @@ class ScenarioListActivity : AppCompatActivity() {
     }
 
     private fun unlockScenariosProgressively(nickname: String) {
+        var completedChecks = 0 // Counter for completed checks
+
         for (i in scenarios.indices) {
             val scenario = scenarios[i]
             val previousScenario = if (i > 0) scenarios[i - 1] else null
+
             if (previousScenario == null) {
-                scenario.isUnlocked = true // Unlock the first scenario by default
+                // Unlock the first scenario by default
+                scenario.isUnlocked = true
+                completedChecks++
             } else {
+                // Check if the previous scenario was completed on the server
                 gameProgressManager.isScenarioCompleted(nickname, previousScenario.scenarioName) { isCompleted ->
+                    // Unlock the current scenario based on the previous scenario's completion status
                     scenario.isUnlocked = isCompleted
-                    scenarioAdapter.notifyItemChanged(i) // Notify RecyclerView of changes
+                    completedChecks++
+
+                    // Update item once unlocked status is changed
+                    scenarioAdapter.notifyItemChanged(i)
+
+                    // Once all checks are complete, refresh the entire RecyclerView
+                    if (completedChecks == scenarios.size) {
+                        scenarioAdapter.notifyDataSetChanged()
+                    }
                 }
             }
         }
     }
+
+
 
     private fun getScenariosByDifficulty(difficulty: Difficulty): List<EmergencyScenario> {
         return emergencyScenarios.filter { it.difficulty == difficulty }
     }
 
     private fun resetProgress() {
-        gameProgressManager.resetProgress()
-        showMessage("All scenarios have been reset.")
         val nickname = intent.getStringExtra("nickname") ?: ""
+        gameProgressManager.resetProgress(nickname)  // Pass nickname to reset only this user's progress
+        showMessage("All scenarios have been reset.")
         unlockScenariosProgressively(nickname)
         scenarioAdapter.notifyDataSetChanged()
     }
+
 
     private fun showMessage(message: String) {
         // Display a message to the user

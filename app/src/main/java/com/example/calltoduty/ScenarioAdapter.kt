@@ -1,5 +1,6 @@
 package com.example.calltoduty
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class ScenarioAdapter(
         private val scenarioDescriptionTextView: TextView = itemView.findViewById(R.id.scenarioDescriptionTextView)
 
         fun bind(scenario: EmergencyScenario) {
+            Log.d("ScenarioAdapter", "Binding ${scenario.scenarioName} with unlocked status: ${scenario.isUnlocked}")
             scenarioNameTextView.text = scenario.scenarioName
             scenarioDescriptionTextView.text = "Difficulty: ${scenario.difficulty}"
             itemView.apply {
