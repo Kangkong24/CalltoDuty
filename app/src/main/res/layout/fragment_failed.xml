@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/dia_container"
+        android:background="@drawable/fragment_cont"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -29,7 +29,7 @@
             android:id="@+id/playAgainButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/playagain_btn"
+            android:background="@drawable/pa_btn"
             android:scaleType="centerInside"
             android:contentDescription="@string/close_button_desc"/>
 

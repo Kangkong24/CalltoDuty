@@ -14,7 +14,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/dia_container"
+        android:background="@drawable/fragment_cont"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -30,7 +30,7 @@
             android:id="@+id/nextLevelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/nextlevel_btn"
+            android:src="@drawable/nl_btn"
             android:scaleType="centerInside"
             android:contentDescription="@string/next_button_desc"/>
 

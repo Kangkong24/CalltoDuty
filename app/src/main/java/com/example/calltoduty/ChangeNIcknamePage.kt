@@ -75,10 +75,7 @@ class ChangeNicknamePage : AppCompatActivity() {
                     Log.d("ChangeNicknamePage", "Response Body: $responseBody")
                     if (responseBody == "Nickname updated successfully") {
                         Toast.makeText(this@ChangeNicknamePage, "Nickname updated", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@ChangeNicknamePage, OptionFragment::class.java)
-                        intent.putExtra("updatedNickname", newNickname)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clear previous activities
-                        startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this@ChangeNicknamePage, "Update failed", Toast.LENGTH_SHORT).show()
                     }

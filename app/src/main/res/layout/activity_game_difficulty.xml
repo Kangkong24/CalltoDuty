@@ -32,7 +32,7 @@
             android:id="@+id/easy_btn"
             android:layout_width="wrap_content"
             android:layout_height="70sp"
-            android:src="@drawable/easy_btn"
+            android:src="@drawable/easy"
             />
 
         <ImageView
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/medium_btn"
+            android:src="@drawable/medium"
             />
 
         <ImageView
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="70sp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/hard_btn"
+            android:src="@drawable/hard"
             />
 
     </LinearLayout>

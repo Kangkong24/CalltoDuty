@@ -14,7 +14,8 @@
             android:id="@+id/diffTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Difficulty" />
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/scenarios"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewScenarios"
@@ -26,6 +27,7 @@
             android:id="@+id/reset_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="reset"/>
+            android:fontFamily="@font/poppins_semibold"
+            android:text="@string/reset"/>
     </LinearLayout>
 </RelativeLayout>
