@@ -30,7 +30,7 @@ class SplashScreen : AppCompatActivity() {
             val intent = Intent(this, SignUpScreen::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
+        }, 5000)
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

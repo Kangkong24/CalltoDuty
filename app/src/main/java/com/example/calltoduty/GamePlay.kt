@@ -83,7 +83,7 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         optionImage1 = findViewById(R.id.optionImage1)
         optionImage2 = findViewById(R.id.optionImage2)
         optionImage3 = findViewById(R.id.optionImage3)
-        timerTextView = findViewById(R.id.timerTextView)
+        //timerTextView = findViewById(R.id.timerTextView)
 
 
         // Set up RecyclerView with ResponseAdapter
@@ -147,8 +147,8 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     private fun startTimer() {
         timer = object : CountDownTimer(timeLimit, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                val secondsRemaining = millisUntilFinished / 1000
-                timerTextView.text = "Time left: $secondsRemaining s"
+                //val secondsRemaining = millisUntilFinished / 1000
+                //timerTextView.text = "Time left: $secondsRemaining s"
             }
 
             override fun onFinish() {

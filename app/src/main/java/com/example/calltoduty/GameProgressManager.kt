@@ -102,15 +102,4 @@ class GameProgressManager(private val context: Context, private val apiService: 
             })
         }
     }
-
-    // Reset all progress
-    fun resetProgress(nickname: String) {
-        val editor = sharedPreferences.edit()
-        sharedPreferences.all.keys
-            .filter { it.startsWith("${nickname}_") }  // Only remove keys for the given nickname
-            .forEach { editor.remove(it) }
-        editor.apply()
-    }
-
-
 }

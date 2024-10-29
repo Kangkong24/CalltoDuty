@@ -35,9 +35,7 @@ class ScenarioListActivity : AppCompatActivity() {
         loadScenarios()
         setupRecyclerView()
         unlockScenariosProgressively(nickname)
-        findViewById<Button>(R.id.reset_btn).setOnClickListener {
-            resetProgress()
-        }
+
     }
 
 
@@ -112,20 +110,6 @@ class ScenarioListActivity : AppCompatActivity() {
 
     private fun getScenariosByDifficulty(difficulty: Difficulty): List<EmergencyScenario> {
         return emergencyScenarios.filter { it.difficulty == difficulty }
-    }
-
-    private fun resetProgress() {
-        val nickname = intent.getStringExtra("nickname") ?: ""
-        gameProgressManager.resetProgress(nickname)  // Pass nickname to reset only this user's progress
-        showMessage("All scenarios have been reset.")
-        unlockScenariosProgressively(nickname)
-        scenarioAdapter.notifyDataSetChanged()
-    }
-
-
-    private fun showMessage(message: String) {
-        // Display a message to the user
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
