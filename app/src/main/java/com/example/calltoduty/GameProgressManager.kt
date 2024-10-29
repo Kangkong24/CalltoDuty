@@ -21,7 +21,7 @@ interface ApiService {
     ): Call<ResponseBody>
 
     @FormUrlEncoded
-    @POST("completed_scenario.php") // Endpoint for checking if the scenario is completed
+    @POST("is_scenario_completed.php") // Endpoint for checking if the scenario is completed
     fun isScenarioCompleted(
         @Field("nickname") nickname: String,
         @Field("scenario_name") scenarioName: String
@@ -45,7 +45,6 @@ class GameProgressManager(private val context: Context, private val apiService: 
                     val responseString = response.body()?.string()
                     val jsonResponse = JSONObject(responseString ?: "{}")
                     val status = jsonResponse.optString("status")
-
                     when (status) {
                         "completed_scenario_saved" -> {
                             Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
@@ -83,7 +82,6 @@ class GameProgressManager(private val context: Context, private val apiService: 
                         val responseString = response.body()?.string()
                         val jsonResponse = JSONObject(responseString ?: "{}")
                         val status = jsonResponse.optString("status")
-
                         if (status == "already_completed") {
                             markScenarioAsCompleted(nickname, scenarioName)
                             callback(true) // Mark as completed if found on server

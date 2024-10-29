@@ -49,7 +49,7 @@ class ScenarioListActivity : AppCompatActivity() {
             .setLenient()
             .create()
         val apiService = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16-/")
+            .baseUrl("http://192.168.100.16/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)
@@ -79,10 +79,8 @@ class ScenarioListActivity : AppCompatActivity() {
     private fun unlockScenariosProgressively(nickname: String) {
         var completedChecks = 0 // Counter for completed checks
 
-        for (i in scenarios.indices) {
-            val scenario = scenarios[i]
-            val previousScenario = if (i > 0) scenarios[i - 1] else null
-
+        scenarios.forEachIndexed { index, scenario ->
+            val previousScenario = if (index > 0) scenarios[index - 1] else null
             if (previousScenario == null) {
                 // Unlock the first scenario by default
                 scenario.isUnlocked = true
@@ -90,12 +88,16 @@ class ScenarioListActivity : AppCompatActivity() {
             } else {
                 // Check if the previous scenario was completed on the server
                 gameProgressManager.isScenarioCompleted(nickname, previousScenario.scenarioName) { isCompleted ->
-                    // Unlock the current scenario based on the previous scenario's completion status
                     scenario.isUnlocked = isCompleted
                     completedChecks++
-
+                    // Save scenario as unlocked if completed
+                    val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        putBoolean(scenario.scenarioName, isCompleted)
+                        apply()
+                    }
                     // Update item once unlocked status is changed
-                    scenarioAdapter.notifyItemChanged(i)
+                    scenarioAdapter.notifyItemChanged(index)
 
                     // Once all checks are complete, refresh the entire RecyclerView
                     if (completedChecks == scenarios.size) {
@@ -105,6 +107,8 @@ class ScenarioListActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 
 
