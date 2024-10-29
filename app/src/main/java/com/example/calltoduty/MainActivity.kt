@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var playButton : ImageView
     private lateinit var optionBtn : ImageView
+    private lateinit var creditsBtn : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         playButton = this.findViewById(R.id.playButton)
         optionBtn = this.findViewById(R.id.optionBtn)
+        creditsBtn = this.findViewById(R.id.creditsButton)
 
 
         MusicManager.initialize(this, "bg_music", R.raw.bg_music, loop = true, volume = -5.0f)
@@ -49,20 +51,24 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        creditsBtn.setOnClickListener {
+            CreditsFragment.newInstance().show(supportFragmentManager, "creditsFragment")
+        }
 
 
 
 
 
-        /*optionBtn.setOnClickListener{
-            // Get the current nickname
-            val intent = Intent(this, OptionScreen::class.java)
-            intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
-            intent.putExtra("signUp_nickname", signUpNN)
-            startActivity(intent)
+
+            /*optionBtn.setOnClickListener{
+                // Get the current nickname
+                val intent = Intent(this, OptionScreen::class.java)
+                intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
+                intent.putExtra("signUp_nickname", signUpNN)
+                startActivity(intent)
 
 
-        }*/
+            }*/
 
         /*
         Log.i("tag","Hello")
