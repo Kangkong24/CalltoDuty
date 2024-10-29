@@ -203,6 +203,56 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
 
     EmergencyScenario(
         difficulty = Difficulty.EASY,
+        scenarioName = "Baby Locked Inside a Car",
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call from a distressed person saying, 'There’s a baby locked in the car!'",
+                textOptions = listOf("Where are you located?", "Is the baby showing any signs of distress?", "How long has the baby been inside?"),
+                responseMessages = mapOf(
+                    0 to "I’m in the grocery store parking lot, near 12th Avenue.",
+                    1 to "The baby looks flushed and is crying!",
+                    2 to "It’s been about 10 minutes since they got locked in."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Is the car in direct sunlight?", "Do you have anything to break the window?", "Is anyone else nearby to help?"),
+                responseMessages = mapOf(
+                    0 to "Yes, the car is right in the sun, and it’s really hot out!",
+                    1 to "No, I don’t have anything to break it safely.",
+                    2 to "There are a few people around, but no one knows what to do."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Try to keep the baby calm from outside.", "Stand by while I send help.", "Is the car unlocked from any door or window?"),
+                responseMessages = mapOf(
+                    0 to "I’m trying, but the baby is crying harder.",
+                    1 to "Please hurry. The baby looks uncomfortable!",
+                    2 to "No, all doors and windows are locked!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("I’m dispatching emergency services now.", "Do you see any emergency buttons in the car?", "Stay with the car until help arrives."),
+                responseMessages = mapOf(
+                    0 to "Thank you. Please hurry!",
+                    1 to "No, it’s an older model, so I don’t think it has any.",
+                    2 to "I’ll stay right here."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(1)
+            )
+        )
+    ),
+
+
+
+    EmergencyScenario(
+        difficulty = Difficulty.EASY,
         scenarioName = "Lost Child",
         steps = mutableListOf(
             Dialogue(
@@ -510,6 +560,55 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             )
         )
     ),
+
+    EmergencyScenario(
+        difficulty = Difficulty.MEDIUM,
+        scenarioName = "Family Murder Confession",
+        steps = mutableListOf(
+            Dialogue(
+                message = "I... I killed my family. ",
+                textOptions = listOf("Can you tell me what happened?", "Where are you right now?", "Is anyone else in danger?"),
+                responseMessages = mapOf(
+                    0 to "I… I lost control. They wouldn't stop screaming. I didn't mean for it to go this far.",
+                    1 to "I’m at home, in the living room. The knife… it’s still here with me.",
+                    2 to "No, no… there’s no one left. Just me."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Are you hurt?", "Can you put the knife down for me?", "Stay on the line with me, okay?"),
+                responseMessages = mapOf(
+                    0 to "No… it’s not me. It’s them.",
+                    1 to "I’ll try, but it feels like it’s stuck to my hand.",
+                    2 to "Okay… I’ll stay, but I don’t know what’s going to happen."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Take a deep breath and stay calm.", "Do you want to tell me more about what happened?", "Are you in a safe place right now?"),
+                responseMessages = mapOf(
+                    0 to "I can’t calm down… I can still see their faces.",
+                    1 to "It’s… it’s all a blur. They were shouting at me. I lost control.",
+                    2 to "I’m in the living room. I don’t feel safe anywhere anymore."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Help is on the way. Just stay where you are.", "Can you place the knife down on the floor?", "Would you like to talk about what’s on your mind?"),
+                responseMessages = mapOf(
+                    0 to "I’ll stay here. Just… please don’t take too long.",
+                    1 to "Okay… it’s down, but it feels like it’s still in my hand.",
+                    2 to "There’s so much in my head… I don’t even know where to start."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(2) // Sending police is the correct action to secure the scene and provide mental health support.
+            )
+        )
+    ),
+
 
 
 
@@ -847,6 +946,64 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
                 message = "",
                 imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
                 correctOption = setOf(2) // Sending the police is the correct action
+            )
+        )
+    ),
+
+
+    EmergencyScenario(
+        difficulty = Difficulty.HARD,
+        scenarioName = "Family Trapped Inside a Tanker",
+        steps = mutableListOf(
+            Dialogue(
+                message = "We're stuck inside a tanker! Please help! ",
+                textOptions = listOf("Where is the tanker located?", "How many people are with you?", "What happened? How did you get stuck?"),
+                responseMessages = mapOf(
+                    0 to "We're on the highway, near Exit 14. I don’t know exactly where!",
+                    1 to "It’s me, my husband, and our two kids. We can’t get out!",
+                    2 to "The door got jammed. We tried everything, but it won't budge!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Is there any fuel leaking?", "Are you injured?", "Is there anyone outside who can help?"),
+                responseMessages = mapOf(
+                    0 to "I don’t see anything leaking, but I smell something strange!",
+                    1 to "No injuries, but we’re having trouble breathing!",
+                    2 to "No, there’s no one around. We’re on a deserted road."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you open a window or vent?", "Stay calm, I’m sending help.", "Is the smell getting stronger?"),
+                responseMessages = mapOf(
+                    0 to "We tried, but nothing opens from inside!",
+                    1 to "I’m trying to stay calm, but my kids are scared!",
+                    2 to "Yes, it’s getting worse. We’re all feeling dizzy."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Move to the back of the tanker, away from the smell.", "Try banging on the door or windows.", "Do you see any emergency release or latch?"),
+                responseMessages = mapOf(
+                    0 to "The smell is everywhere. I don’t think we can avoid it.",
+                    1 to "We’ve been banging, but no one’s stopping!",
+                    2 to "I don’t see any latch. It’s pitch black in here."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Keep talking to me, help is on the way.", "Do you hear any sounds outside?", "Can you feel any movement in the tanker?"),
+                responseMessages = mapOf(
+                    0 to "I will, but please hurry. I’m really scared.",
+                    1 to "No, it’s completely silent outside.",
+                    2 to "No, the tanker’s not moving, but it feels hot inside."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(1) // Fire department is the best option for rescue in a hazardous environment.
             )
         )
     ),
