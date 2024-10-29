@@ -146,13 +146,70 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
 
     EmergencyScenario(
         difficulty = Difficulty.EASY,
+        scenarioName = "Prank Call",
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call from someone claiming there's a fire at the local mall.",
+                textOptions = listOf("What’s your location?", "Can you describe the fire?", "How long has the fire been burning?"),
+                responseMessages = mapOf(
+                    0 to "Uh… I’m actually not at the mall right now, but I saw it earlier.",
+                    1 to "It’s, um, really big, and there’s smoke everywhere!",
+                    2 to "It just started, I think. Like, maybe five minutes ago."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Are there people around?", "Did you see anyone hurt?", "Why didn't you call sooner?"),
+                responseMessages = mapOf(
+                    0 to "Yeah, there are a few people, I guess.",
+                    1 to "Um, no one looked hurt when I saw it.",
+                    2 to "I just… remembered to call now, I guess."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you describe the smoke?", "Are you safe?", "What’s your name?"),
+                responseMessages = mapOf(
+                    0 to "It’s, uh, dark smoke? Or maybe light? I’m not sure.",
+                    1 to "I’m safe, yeah. I’m at home.",
+                    2 to "Why do you need to know my name?"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Are you sure this is real?", "Do you need medical help?", "Is there anyone else who can confirm this?"),
+                responseMessages = mapOf(
+                    0 to "Uh… yeah, it’s real. I’m not lying.",
+                    1 to "No, I’m fine. Don’t worry about me.",
+                    2 to "No, I don’t think anyone else saw it."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("We’ll send someone to check it out.", "Stay on the line, please.", "I’ll need more details from you."),
+                responseMessages = mapOf(
+                    0 to "Okay, thanks.",
+                    1 to "I don’t really want to stay on the line.",
+                    2 to "I told you all I know. Can you just send someone?"
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.endcall_btn),
+                correctOption = setOf(2) // The correct response is to send police to assess if it’s a prank, but with caution.
+            )
+        )
+    ),
+
+    EmergencyScenario(
+        difficulty = Difficulty.EASY,
         scenarioName = "Lost Child",
         steps = mutableListOf(
             Dialogue(
                 message = "You receive a call from a concerned parent about a missing child.",
                 textOptions = listOf("How old is your child?", "When did they go missing?", "What are they wearing?"),
                 responseMessages = mapOf(
-                    0 to "They are 5 years old.",
+                    0 to "My child is 5 years old.",
                     1 to "They went missing about an hour ago.",
                     2 to "They are wearing a red jacket and jeans."
                 )
@@ -353,30 +410,39 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
         scenarioName = "House Fire",
         steps = mutableListOf(
             Dialogue(
-                message = "You receive a call about a fire breaking out in a house.",
-                textOptions = listOf("Where are you?", "Is anyone inside?", "What caused the fire?"),
+                message = "You receive a frantic call from a resident reporting a fire in their house. The caller sounds terrified.",
+                textOptions = listOf("Where are you right now?", "Is anyone still inside?", "What do you see around you?"),
                 responseMessages = mapOf(
-                    0 to "I'm at 456 Maple Street.",
-                    1 to "Yes, my family is still inside!",
-                    2 to "I don't know! It just started suddenly."
+                    0 to "I'm at 456 Maple Street, the fire is huge!",
+                    1 to "Yes, my whole family is trapped on the second floor! Please help!",
+                    2 to "I see flames coming out of the windows and thick smoke!"
                 )
             ),
             Dialogue(
                 message = "",
-                textOptions = listOf("Can they get out?", "Stay calm, help is on the way.", "Do you have a fire extinguisher?"),
+                textOptions = listOf("Can they escape through a window?", "Stay calm, help is on the way.", "Do you have any means to put out the fire?"),
                 responseMessages = mapOf(
-                    0 to "No, they are trapped on the second floor.",
-                    1 to "I’m trying to stay calm, but it’s spreading fast!",
-                    2 to "No, I don’t have one!"
+                    0 to "No, they are trapped! The fire is blocking the stairs!",
+                    1 to "I’m trying to stay calm, but it’s spreading so quickly!",
+                    2 to "I don’t have anything to stop it! It’s too big!"
                 )
             ),
             Dialogue(
                 message = "",
-                textOptions = listOf("Can you see the fire?", "Break a window!", "Is anyone injured?"),
+                textOptions = listOf("Can you see the fire clearly?", "Try to get to a window and signal for help!", "Is anyone hurt or in danger?"),
                 responseMessages = mapOf(
-                    0 to "The fire is blocking the stairs.",
-                    1 to "I can't get close enough to help.",
-                    2 to "I think my daughter is hurt!"
+                    0 to "Yes, the flames are raging in the living room, and smoke is filling the house!",
+                    1 to "I can’t reach the window; it’s too dangerous!",
+                    2 to "I think my daughter is hurt! She might have fallen!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Tell your family to stay low to the ground!", "Keep talking to me, help is on the way!", "Try to find a place to escape!"),
+                responseMessages = mapOf(
+                    0 to "They’re trying, but the smoke is too much!",
+                    1 to "I can hear the sirens in the distance, but it feels like forever!",
+                    2 to "I can’t leave them! What should I do?"
                 )
             ),
             Dialogue(
@@ -386,6 +452,66 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             )
         )
     ),
+
+
+    EmergencyScenario(
+        difficulty = Difficulty.MEDIUM,
+        scenarioName = "Dog Attack",
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call from a panicked resident who says, 'There’s a dog going crazy in the neighborhood, and it’s attacking anyone it sees!'",
+                textOptions = listOf("Where are you right now?", "Can you describe the dog?", "Has anyone been injured?"),
+                responseMessages = mapOf(
+                    0 to "I’m hiding inside my house, but it’s right outside!",
+                    1 to "It’s a big dog, looks like it has foam around its mouth.",
+                    2 to "Yes, my neighbor got bit pretty badly."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Is the dog still outside?", "How many people are nearby?", "Has animal control been called?"),
+                responseMessages = mapOf(
+                    0 to "Yes, it’s pacing back and forth.",
+                    1 to "There are a few people trying to hide or run away.",
+                    2 to "No, I called you first!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you stay inside?", "Are there any children or elderly around?", "Is anyone trying to contain the dog?"),
+                responseMessages = mapOf(
+                    0 to "Yes, I’m staying inside and locking the doors.",
+                    1 to "Yes, some children were playing outside but are hiding now.",
+                    2 to "No, no one wants to get close to it!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Please don’t go outside.", "Keep watching from a safe distance.", "Try to call the dog over."),
+                responseMessages = mapOf(
+                    0 to "I’ll stay inside, don’t worry.",
+                    1 to "Okay, I’m watching from the window.",
+                    2 to "I don’t think that’s a good idea!"
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("We’re sending help, stay calm.", "Do you need medical assistance for the bitten neighbor?", "Can you describe any other unusual behavior from the dog?"),
+                responseMessages = mapOf(
+                    0 to "Thank you, I’m so worried.",
+                    1 to "Yes, the bite looks serious.",
+                    2 to "It’s just acting wild, barking and attacking."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.animalcontrol_btn),// need to create a animal control option
+                correctOption = setOf(2)
+            )
+        )
+    ),
+
+
 
     EmergencyScenario(
         difficulty = Difficulty.MEDIUM,
@@ -608,6 +734,66 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
 
 
     //Hard Difficulty here
+
+    EmergencyScenario(
+        difficulty = Difficulty.HARD,
+        scenarioName = "Pizza Order",
+        steps = mutableListOf(
+            Dialogue(
+                message = "You receive a call from a woman who says, 'Hi, I’d like to order a pizza for delivery.'",
+                textOptions = listOf("This is 911. Do you need help?", "Ma'am, this is an emergency line.", "What toppings would you like?"),
+                responseMessages = mapOf(
+                    0 to "Yes, please. I need a large pizza.",
+                    1 to "Yes, a pizza, please.",
+                    2 to "Anything, just make it quick."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Is there someone with you?", "Are you in danger?", "How soon do you need it?"),
+                responseMessages = mapOf(
+                    0 to "Yes, he’s right here.",
+                    1 to "Yes, I am.",
+                    2 to "As soon as possible, please."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you stay on the line?", "Is there a safe place you can go?", "Do you need medical assistance?"),
+                responseMessages = mapOf(
+                    0 to "No, I don’t think I can stay long.",
+                    1 to "No, not right now.",
+                    2 to "Maybe, I’m not sure."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Can you confirm your address for delivery?", "Do you want us to bring extra help?", "How many people are there with you?"),
+                responseMessages = mapOf(
+                    0 to "Yes, it’s 123 Main Street.",
+                    1 to "Yes, extra help would be good.",
+                    2 to "Just one other person."
+                )
+            ),
+            Dialogue(
+                message = "",
+                textOptions = listOf("Help is on the way, stay safe.", "We’ll be there soon with your order.", "Try to stay calm and act normal."),
+                responseMessages = mapOf(
+                    0 to "Thank you.",
+                    1 to "Okay, thank you.",
+                    2 to "I will, thank you."
+                )
+            ),
+            Dialogue(
+                message = "",
+                imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.police_btn),
+                correctOption = setOf(2) // Sending the police is the correct action, as this is a domestic violence emergency.
+            )
+        )
+    ),
+
+
+
     EmergencyScenario(
         difficulty = Difficulty.HARD,
         scenarioName = "Armed Robbery in Progress",

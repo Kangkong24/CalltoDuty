@@ -29,7 +29,7 @@ class ScenarioListActivity : AppCompatActivity() {
         val nickname = sharedPreferences.getString("nickname", "") ?: ""
         Log.d("retrieveNickname", "Nickname retrieved in ScenarioListActivity: $nickname")
 
-        // Rest of your setup code
+
         initViews()
         setupGameProgressManager()
         loadScenarios()
@@ -46,12 +46,12 @@ class ScenarioListActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun setupGameProgressManager() {
+   private fun setupGameProgressManager() {
         val gson: Gson = GsonBuilder()
             .setLenient()
             .create()
         val apiService = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/")
+            .baseUrl("http://192.168.100.16-/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService::class.java)

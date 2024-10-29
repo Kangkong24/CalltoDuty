@@ -18,15 +18,19 @@ class GameDifficulty : AppCompatActivity() {
         val easyButton = findViewById<ImageView>(R.id.easy_btn)
         val mediumButton = findViewById<ImageView>(R.id.medium_btn)
         val hardButton = findViewById<ImageView>(R.id.hard_btn)
+        val scenario = intent.getStringExtra("selectedScenario") ?: " "
 
         easyButton.setOnClickListener {
             startScenarioListWithDifficulty(Difficulty.EASY)
+            intent.putExtra("selectedScenario", scenario)
         }
         mediumButton.setOnClickListener {
             startScenarioListWithDifficulty(Difficulty.MEDIUM)
+            intent.putExtra("selectedScenario", scenario)
         }
         hardButton.setOnClickListener {
             startScenarioListWithDifficulty(Difficulty.HARD)
+            intent.putExtra("selectedScenario", scenario)
         }
     }
 
