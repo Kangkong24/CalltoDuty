@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import android.media.MediaPlayer
-import kotlin.math.sign
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -14,6 +15,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playButton : ImageView
     private lateinit var optionBtn : ImageView
     private lateinit var creditsBtn : ImageView
+    private var backPressedTime: Long = 0
+    private lateinit var backToast: Toast
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,25 +60,21 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-
-
-            /*optionBtn.setOnClickListener{
-                // Get the current nickname
-                val intent = Intent(this, OptionScreen::class.java)
-                intent.putExtra("currentNickname", currentNickname) // Pass it to OptionScreen
-                intent.putExtra("signUp_nickname", signUpNN)
-                startActivity(intent)
-
-
-            }*/
-
-        /*
-        Log.i("tag","Hello")
-        Log.i("tag","World") */
-
+        // Custom back button behavior
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    backToast.cancel()
+                    finishAffinity()
+                } else {
+                    backToast = Toast.makeText(applicationContext, "Press again to exit", Toast.LENGTH_SHORT)
+                    backToast.show()
+                }
+                backPressedTime = System.currentTimeMillis()
+            }
+        })
     }
+
     override fun onDestroy() {
         super.onDestroy()
         MusicManager.release()

@@ -839,7 +839,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
         scenarioName = "Pizza Order",
         steps = mutableListOf(
             Dialogue(
-                message = "You receive a call from a woman who says, 'Hi, I’d like to order a pizza for delivery.'",
+                message = "Hi, I’d like to order a pizza for delivery.",
                 textOptions = listOf("This is 911. Do you need help?", "Ma'am, this is an emergency line.", "What toppings would you like?"),
                 responseMessages = mapOf(
                     0 to "Yes, please. I need a large pizza.",

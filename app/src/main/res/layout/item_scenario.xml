@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:fontFamily="@font/poppins_semibold"
         android:textColor="@android:color/black"
         android:textStyle="bold"/>
 
@@ -20,5 +21,14 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@android:color/darker_gray"/>
+
+    <ImageView
+        android:id="@+id/scenarioImageView"
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/scenario_image_description"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
 
 </LinearLayout>
