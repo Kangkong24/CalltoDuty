@@ -79,7 +79,7 @@ class SignUpScreen : AppCompatActivity() {
     private fun sendSignupData(nickname: String) {
         // Configure Retrofit instance for network operations
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") // Base URL for the API endpoint
+            .baseUrl("http://192.168.1.61/rest_api") // Base URL for the API endpoint
             .addConverterFactory(GsonConverterFactory.create()) // Gson converter for JSON parsing
             .build()
 

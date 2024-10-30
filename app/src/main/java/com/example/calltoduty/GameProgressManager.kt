@@ -11,40 +11,40 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-// Retrofit API service interface
+// Retrofit API service interface for server communication
 interface ApiService {
     @FormUrlEncoded
-    @POST("completed_scenario.php") // Endpoint for marking scenario as completed
+    @POST("completed_scenario.php") // Endpoint for marking a scenario as completed
     fun markScenarioAsCompleted(
-        @Field("nickname") nickname: String,
-        @Field("scenario_name") scenarioName: String
+        @Field("nickname") nickname: String, // User's nickname
+        @Field("scenario_name") scenarioName: String // Name of the scenario
     ): Call<ResponseBody>
 
     @FormUrlEncoded
     @POST("is_scenario_completed.php") // Endpoint for checking if the scenario is completed
     fun isScenarioCompleted(
-        @Field("nickname") nickname: String,
-        @Field("scenario_name") scenarioName: String
+        @Field("nickname") nickname: String, // User's nickname
+        @Field("scenario_name") scenarioName: String // Name of the scenario
     ): Call<ResponseBody>
 }
 
-// GameProgressManager class to handle game progress
+// GameProgressManager class to handle user progress in the game
 class GameProgressManager(private val context: Context, private val apiService: ApiService) {
     private val sharedPreferences = context.getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
 
-    // Save scenario completion locally and mark it on the server
+    // Method to mark a scenario as completed
     fun markScenarioAsCompleted(nickname: String, scenarioName: String) {
-        // Save the completion state locally
-        val key = "${nickname}_$scenarioName"  // Add nickname as a prefix
-        sharedPreferences.edit().putBoolean(key, true).apply()
+        // Save the completion state locally using a unique key
+        val key = "${nickname}_$scenarioName"  // Key is a combination of nickname and scenario name
+        sharedPreferences.edit().putBoolean(key, true).apply() // Update shared preferences
 
-        // Make network call to mark it on the server
+        // Make a network call to mark the scenario as completed on the server
         apiService.markScenarioAsCompleted(nickname, scenarioName).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    val responseString = response.body()?.string()
-                    val jsonResponse = JSONObject(responseString ?: "{}")
-                    val status = jsonResponse.optString("status")
+                    val responseString = response.body()?.string() // Get the response body as a string
+                    val jsonResponse = JSONObject(responseString ?: "{}") // Parse the response as JSON
+                    val status = jsonResponse.optString("status") // Extract the status from the JSON response
                     when (status) {
                         "completed_scenario_saved" -> {
                             Toast.makeText(context, "Scenario marked as completed", Toast.LENGTH_SHORT).show()
@@ -67,35 +67,35 @@ class GameProgressManager(private val context: Context, private val apiService: 
         })
     }
 
-    // Check if a scenario is completed locally and from the server
+    // Method to check if a scenario is completed
     fun isScenarioCompleted(nickname: String, scenarioName: String, callback: (Boolean) -> Unit) {
         // Check local progress first
-        val key = "${nickname}_$scenarioName"  // Use nickname-specific key
-        val completed = sharedPreferences.getBoolean(key, false)
+        val key = "${nickname}_$scenarioName"  // Key for the user's completion status
+        val completed = sharedPreferences.getBoolean(key, false) // Retrieve completion status from shared preferences
         if (completed) {
-            callback(true) // Already completed locally
+            callback(true) // Scenario already completed locally
         } else {
-            // Make a network call to check if it's completed on the server
+            // Make a network call to check if the scenario is completed on the server
             apiService.isScenarioCompleted(nickname, scenarioName).enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
-                        val responseString = response.body()?.string()
-                        val jsonResponse = JSONObject(responseString ?: "{}")
-                        val status = jsonResponse.optString("status")
+                        val responseString = response.body()?.string() // Get the response body as a string
+                        val jsonResponse = JSONObject(responseString ?: "{}") // Parse the response as JSON
+                        val status = jsonResponse.optString("status") // Extract the status from the JSON response
                         if (status == "already_completed") {
-                            markScenarioAsCompleted(nickname, scenarioName)
-                            callback(true) // Mark as completed if found on server
+                            markScenarioAsCompleted(nickname, scenarioName) // Mark as completed if found on server
+                            callback(true) // Scenario is completed
                         } else {
-                            callback(false) // Not completed
+                            callback(false) // Scenario is not completed
                         }
                     } else {
-                        callback(false) // Not completed
+                        callback(false) // Scenario is not completed if response is unsuccessful
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-                    callback(false) // Assume not completed if there's a failure
+                    callback(false) // Assume not completed if there's a network failure
                 }
             })
         }

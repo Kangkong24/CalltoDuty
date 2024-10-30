@@ -359,9 +359,4 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             Log.d("endGame", "Scenario not selected")
         }
     }
-
-
-
-
-
 }
