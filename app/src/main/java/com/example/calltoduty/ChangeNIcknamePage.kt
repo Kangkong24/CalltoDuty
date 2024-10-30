@@ -75,6 +75,7 @@ class ChangeNicknamePage : AppCompatActivity() {
                     Log.d("ChangeNicknamePage", "Response Body: $responseBody")
                     if (responseBody == "Nickname updated successfully") {
                         Toast.makeText(this@ChangeNicknamePage, "Nickname updated", Toast.LENGTH_SHORT).show()
+                        intent.putExtra("updatedNickname", newNickname)
                         finish()
                     } else {
                         Toast.makeText(this@ChangeNicknamePage, "Update failed", Toast.LENGTH_SHORT).show()
