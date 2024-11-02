@@ -149,48 +149,48 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
         scenarioName = "Prank Call",
         steps = mutableListOf(
             Dialogue(
-                message = "You receive a call from someone claiming there's a fire at the local mall.",
-                textOptions = listOf("What’s your location?", "Can you describe the fire?", "How long has the fire been burning?"),
+                message = "Help! My friend just exploded!",
+                textOptions = listOf("Can you tell me what happened?", "Are you in danger?", "Where are you located?"),
                 responseMessages = mapOf(
-                    0 to "Uh… I’m actually not at the mall right now, but I saw it earlier.",
-                    1 to "It’s, um, really big, and there’s smoke everywhere!",
-                    2 to "It just started, I think. Like, maybe five minutes ago."
+                    0 to "They just… exploded! Like a balloon!",
+                    1 to "I think we’re okay… for now.",
+                    2 to "Um… we’re at our school’s playground."
                 )
             ),
             Dialogue(
                 message = "",
-                textOptions = listOf("Are there people around?", "Did you see anyone hurt?", "Why didn't you call sooner?"),
+                textOptions = listOf("How many people are there with you?", "Is anyone hurt?", "Stay calm. Help is on the way."),
                 responseMessages = mapOf(
-                    0 to "Yeah, there are a few people, I guess.",
-                    1 to "Um, no one looked hurt when I saw it.",
-                    2 to "I just… remembered to call now, I guess."
+                    0 to "There are three of us here.",
+                    1 to "Nope! Just… pieces everywhere! Haha!",
+                    2 to "Oh, I’m super calm. Don’t worry!"
                 )
             ),
             Dialogue(
                 message = "",
-                textOptions = listOf("Can you describe the smoke?", "Are you safe?", "What’s your name?"),
+                textOptions = listOf("Are you sure this isn’t a joke?", "Is this a real emergency?", "What’s your name?"),
                 responseMessages = mapOf(
-                    0 to "It’s, uh, dark smoke? Or maybe light? I’m not sure.",
-                    1 to "I’m safe, yeah. I’m at home.",
-                    2 to "Why do you need to know my name?"
+                    0 to "Uh… well… maybe it’s a little joke.",
+                    1 to "Okay, you got us! We’re just messing around.",
+                    2 to "Oh, I probably shouldn't have called. Sorry!"
                 )
             ),
             Dialogue(
                 message = "",
                 textOptions = listOf("Are you sure this is real?", "Do you need medical help?", "Is there anyone else who can confirm this?"),
                 responseMessages = mapOf(
-                    0 to "Uh… yeah, it’s real. I’m not lying.",
-                    1 to "No, I’m fine. Don’t worry about me.",
-                    2 to "No, I don’t think anyone else saw it."
+                    0 to "haha, Yeah it was just a prank call. Sorry!",
+                    1 to "haha, Yeah it was just a prank call. Sorry!",
+                    2 to "haha, Yeah it was just a prank call. Sorry!"
                 )
             ),
             Dialogue(
                 message = "",
-                textOptions = listOf("We’ll send someone to check it out.", "Stay on the line, please.", "I’ll need more details from you."),
+                textOptions = listOf("Prank calls waste valuable resources.", "Please don’t call 911 unless it’s an emergency.", "Goodbye."),
                 responseMessages = mapOf(
-                    0 to "Okay, thanks.",
-                    1 to "I don’t really want to stay on the line.",
-                    2 to "I told you all I know. Can you just send someone?"
+                    0 to "Sorry! I won’t do it again.",
+                    1 to "Okay, I understand. It was a dumb idea.",
+                    2 to "Bye!"
                 )
             ),
             Dialogue(
@@ -870,8 +870,8 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
                 textOptions = listOf("Can you confirm your address for delivery?", "Do you want us to bring extra help?", "How many people are there with you?"),
                 responseMessages = mapOf(
                     0 to "Yes, it’s 123 Main Street.",
-                    1 to "Yes, extra help would be good.",
-                    2 to "Just one other person."
+                    1 to "Yes, extra cheese would be good.",
+                    2 to "Just one, please."
                 )
             ),
             Dialogue(

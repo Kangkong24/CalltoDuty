@@ -2,25 +2,19 @@ package com.example.calltoduty
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-
+import androidx.fragment.app.DialogFragment
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class FailedFragment : DialogFragment() {
+class WarningFragment : DialogFragment() {
     private var param1: String? = null
     private var param2: String? = null
-
-    // Define an interface for communication with the activity
-    interface FailedFragmentListener {
-        fun onPlayAgain()
-    }
-    private var listener: FailedFragmentListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,35 +22,19 @@ class FailedFragment : DialogFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-
-        // Ensure the host activity implements the listener interface
-        if (activity is FailedFragmentListener) {
-            listener = activity as FailedFragmentListener
-        } else {
-            throw RuntimeException("$activity must implement FailedFragmentListener")
-        }
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_failed, container, false)
+        val view = inflater.inflate(R.layout.fragment_warning, container, false)
 
-        // Find the button and set a click listener
-        val playAgainButton: ImageView = view.findViewById(R.id.playAgainButton)
-        playAgainButton.setOnClickListener {
+        val confirmBtn: ImageView? = view?.findViewById(R.id.confirmButton)
 
-            // Notify the activity to restart the game
-            listener?.onPlayAgain()
-            // Dismiss the dialog when the button is clicked
+        confirmBtn?.setOnClickListener {
             dismiss()
         }
-
         return view
     }
 
@@ -65,12 +43,12 @@ class FailedFragment : DialogFragment() {
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         return dialog
-    }
+    }// new added ito
+
 
     companion object {
-        @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            FailedFragment().apply {
+            WarningFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

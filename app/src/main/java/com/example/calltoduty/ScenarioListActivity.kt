@@ -73,6 +73,7 @@ class ScenarioListActivity : AppCompatActivity() {
     private fun startGamePlayActivity(scenario: EmergencyScenario) {
         val intent = Intent(this, GamePlay::class.java)
         intent.putExtra("selectedScenario", scenario)
+        intent.putExtra("difficulty", scenario.difficulty.name) // Pass difficulty to GamePlay
         startActivity(intent)
     }
 

@@ -1,5 +1,6 @@
 package com.example.calltoduty
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
@@ -40,6 +41,13 @@ class SuccessFragment : DialogFragment() {
         }
 
         return view
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        return dialog
     }
 
     companion object {

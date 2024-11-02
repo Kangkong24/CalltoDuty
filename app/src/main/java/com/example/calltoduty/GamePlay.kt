@@ -30,6 +30,11 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     private lateinit var timerTextView: TextView
     private val timeLimit: Long = 15000 // 15 seconds per question
     //private lateinit var messageTextView: TextView
+    private var lastClickTime: Long = 0
+    private var clickCount: Int = 0
+    private val spamClickThreshold = 3 // Set the number of clicks allowed in rapid succession
+    private val clickInterval = 500L // 500 milliseconds threshold for rapid clicks
+
 
     private lateinit var gameProgressManager: GameProgressManager
     private lateinit var responseAdapter: ResponseAdapter
@@ -250,6 +255,29 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
 
     private fun handleChoice(choice: Int) {
+        val currentTime = System.currentTimeMillis()
+
+        // Check if the click interval is within the rapid click threshold
+        if (currentTime - lastClickTime < clickInterval) {
+            clickCount++
+        } else {
+            clickCount = 1 // Reset click count if interval is larger than the threshold
+        }
+
+        lastClickTime = currentTime
+
+        // Show WarningFragment if the user spams clicks
+        if (clickCount >= spamClickThreshold) {
+            clickCount = 0 // Reset click count after showing warning
+
+            // Show WarningFragment
+            val warningFragment = WarningFragment.newInstance("Too Many Clicks", "Please slow down!")
+            warningFragment.show(supportFragmentManager, "warningFragment")
+            return // Exit the method to prevent further processing of this click
+        }
+
+
+
         resetTimer() // Reset timer when the user makes a choice
         val scenario = chosenEmergencyScenario ?: return
         val currentDialogue = scenario.steps.getOrNull(currentStep) ?: return
@@ -340,22 +368,18 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             if (nickname.isNotEmpty()) {
                 if (success) {
                     gameProgressManager.markScenarioAsCompleted(nickname, scenario.scenarioName)
-                    showMessage("You successfully helped the caller. Your score: $score")
                     val successFragment = SuccessFragment.newInstance("param1", "param2")
                     successFragment.show(supportFragmentManager, "successFragment")
                     Log.d("endGame", "Showing SuccessFragment")
                 } else {
-                    showMessage("Game over - Too many wrong responses. Your score: $score")
                     val failedFragment = FailedFragment.newInstance("param1", "param2")
                     failedFragment.show(supportFragmentManager, "failedFragment")
                     Log.d("endGame", "Showing FailedFragment")
                 }
             } else {
-                showMessage("Error: Nickname is empty")
                 Log.d("endGame", "Nickname is empty")
             }
         } ?: run {
-            showMessage("Error: Scenario not selected")
             Log.d("endGame", "Scenario not selected")
         }
     }

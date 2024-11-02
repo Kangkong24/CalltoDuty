@@ -1,5 +1,6 @@
 package com.example.calltoduty
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -87,6 +88,13 @@ class OptionFragment : DialogFragment() {
         // Save the state of the switches
         outState.putBoolean("musicSwitchState", musicSwitch.isChecked)
         outState.putBoolean("soundSwitchState", soundSwitch.isChecked)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        return dialog
     }
 
 
