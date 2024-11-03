@@ -85,4 +85,14 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         MusicManager.release()// Release music resources
     }
+    override fun onPause() {
+        super.onPause()
+        MusicManager.stopSound("bg_music") // Pause the music when the app is backgrounded
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MusicManager.startSound("bg_music") // Resume the music when the app comes to the foreground
+    }
+
 }

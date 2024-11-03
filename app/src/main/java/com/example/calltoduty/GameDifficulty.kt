@@ -52,4 +52,10 @@ class GameDifficulty : AppCompatActivity() {
         // Start the music again when returning to this activity
         MusicManager.startSound("bg_music")
     }
+
+    override fun onPause() {
+        super.onPause()
+        MusicManager.stopSound("bg_music") // Pause the music when the app is backgrounded
+    }
+
 }

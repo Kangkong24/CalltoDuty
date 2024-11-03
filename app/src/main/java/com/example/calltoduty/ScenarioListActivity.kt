@@ -130,4 +130,10 @@ class ScenarioListActivity : AppCompatActivity() {
         super.onResume()
         MusicManager.startSound("bg_music") // Start the background music
     }
+
+    override fun onPause() {
+        super.onPause()
+        MusicManager.stopSound("bg_music") // Pause the music when the app is backgrounded
+    }
+
 }

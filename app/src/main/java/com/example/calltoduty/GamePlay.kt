@@ -24,55 +24,56 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Suppress("DEPRECATION")
 class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
-
-    private lateinit var apiService: ApiService // Declare the ApiService variable
-    private lateinit var timer: CountDownTimer
-    private lateinit var timerTextView: TextView
-    private val timeLimit: Long = 15000 // 15 seconds per question
+    // Variables to manage game state and UI components
+    private lateinit var apiService: ApiService // API service for making network requests
+    private lateinit var timer: CountDownTimer // Timer to track time for each question
+    private lateinit var timerTextView: TextView // TextView to display timer
+    private val timeLimit: Long = 15000 // Limit for each question: 15 seconds
     //private lateinit var messageTextView: TextView
-    private var lastClickTime: Long = 0
-    private var clickCount: Int = 0
-    private val spamClickThreshold = 3 // Set the number of clicks allowed in rapid succession
+    private var lastClickTime: Long = 0 // To prevent spam clicks
+    private var clickCount: Int = 0 // Counts rapid clicks
+    private val spamClickThreshold = 3 // Max clicks allowed in rapid succession
     private val clickInterval = 500L // 500 milliseconds threshold for rapid clicks
 
 
-    private lateinit var gameProgressManager: GameProgressManager
-    private lateinit var responseAdapter: ResponseAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var optionButton1: Button
-    private lateinit var optionButton2: Button
-    private lateinit var optionButton3: Button
+    private lateinit var gameProgressManager: GameProgressManager // Manages game progress
+    private lateinit var responseAdapter: ResponseAdapter // Adapter for RecyclerView
+    private lateinit var recyclerView: RecyclerView // Displays user responses
+    private lateinit var optionButton1: Button // Button for option 1
+    private lateinit var optionButton2: Button // Button for option 2
+    private lateinit var optionButton3: Button // Button for option 3
 
-    private lateinit var optionImage1: ImageView
-    private lateinit var optionImage2: ImageView
-    private lateinit var optionImage3: ImageView
+    private lateinit var optionImage1: ImageView // Image view for option 1
+    private lateinit var optionImage2: ImageView // Image view for option 2
+    private lateinit var optionImage3: ImageView // Image view for option 3
 
-    private var score: Int = 0
-    private var wrongChoices: Int = 0
-    private val maxWrongChoices = 1
+    private var score: Int = 0  // Tracks the user's score
+    private var wrongChoices: Int = 0 // Tracks incorrect choices
+    private val maxWrongChoices = 1 // Max allowed wrong choices before game ends
 
-    private val previousResponses: MutableList<Pair<Boolean, String>> = mutableListOf()
+    private val previousResponses: MutableList<Pair<Boolean, String>> = mutableListOf()  // Stores previous user responses
 
-    private var chosenEmergencyScenario: EmergencyScenario? = null
-    private var currentStep = 0
+    private var chosenEmergencyScenario: EmergencyScenario? = null // Selected scenario for the game
+    private var currentStep = 0 // Current step in the scenario
 
     // flag to track if the game was just restarted
     private var gameJustRestarted = false
 
-    private var scenarioIndex: Int = 0 // Store scenario index
+    private var scenarioIndex: Int = 0 // Index for the scenario
 
+    // Called when the activity is created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_game_play)
+        enableEdgeToEdge() // Enables edge-to-edge layout
+        setContentView(R.layout.activity_game_play) // Sets the layout for the activity
 
-
+        // Initializes Retrofit for network requests
         val gson: Gson = GsonBuilder()
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.16/") // Change to your server's base URL
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl("http://192.168.100.16/") // Base URL for API calls
+            .addConverterFactory(GsonConverterFactory.create(gson)) // Adds Gson converter for JSON
             .build()
 
         // Create an instance of ApiService
@@ -93,16 +94,16 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
         // Set up RecyclerView with ResponseAdapter
         responseAdapter = ResponseAdapter(previousResponses)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = responseAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this) // Set layout manager for RecyclerView
+        recyclerView.adapter = responseAdapter // Set adapter for RecyclerView
 
         // Retrieve the scenario index and selected scenario from the Intent
-        scenarioIndex = intent.getIntExtra("scenarioIndex", 0)
-        chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario")
+        scenarioIndex = intent.getIntExtra("scenarioIndex", 0) // Get index
+        chosenEmergencyScenario = intent.getParcelableExtra("selectedScenario") // Get selected scenario
 
         // Start the game with the selected scenario
         chosenEmergencyScenario?.let {
-            startGame(it)
+            startGame(it) // Call startGame with the selected scenario
         }
 
         // Set up option buttons click listeners
@@ -110,26 +111,30 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
         optionButton2.setOnClickListener { handleChoice(1) }
         optionButton3.setOnClickListener { handleChoice(2) }
 
+        // Set up image click listeners
         optionImage1.setOnClickListener { handleChoice(0) }
         optionImage2.setOnClickListener { handleChoice(1) }
         optionImage3.setOnClickListener { handleChoice(2) }
 
         // Initialize and start the game-specific sound
         MusicManager.initialize(this, "gameplay_sound", R.raw.game_bgm, loop = true, volume = 100.0f)
-        MusicManager.startSound("gameplay_sound")
+        MusicManager.startSound("gameplay_sound") // Play background music
     }
 
+    // Called when the activity is paused
     override fun onPause() {
         super.onPause()
-        stopSound("gameplay_music")
-        timer.cancel()
+        stopSound("gameplay_music") // Stop music when paused
+        timer.cancel() // Cancel the timer
     }
 
+    // Called when the activity is resumed
     override fun onResume() {
         super.onResume()
-        MusicManager.startSound("gameplay_sound")
+        MusicManager.startSound("gameplay_sound") // Resume music
     }
 
+    // Called when the activity is stopped
     override fun onStop() {
         super.onStop()
         stopSound("gameplay_sound")  // Stop the gameplay sound when the activity is no longer visible
@@ -138,19 +143,19 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     // Initialize game state
     private fun startGame(scenario: EmergencyScenario) {
-        score = 0
-        wrongChoices = 0
-        chosenEmergencyScenario = scenario
-        currentStep = 0
-        previousResponses.clear()
-        responseAdapter.notifyDataSetChanged()
-        showScenario()
-        startTimer()
-        stopSound("bg_music")
+        score = 0 // Reset score
+        wrongChoices = 0 // Reset wrong choices
+        chosenEmergencyScenario = scenario  // Set chosen scenario
+        currentStep = 0 // Reset current step
+        previousResponses.clear() // Clear previous responses
+        responseAdapter.notifyDataSetChanged() // Notify adapter of data change
+        showScenario() // Display the first scenario
+        startTimer() // Start the timer
+        stopSound("bg_music") // Stop background music
     }
 
     private fun startTimer() {
-        timer = object : CountDownTimer(timeLimit, 1000) {
+        timer = object : CountDownTimer(timeLimit, 1000) { // Count down from timeLimit to 0, tick every second
             override fun onTick(millisUntilFinished: Long) {
                 //val secondsRemaining = millisUntilFinished / 1000
                 //timerTextView.text = "Time left: $secondsRemaining s"
@@ -159,41 +164,41 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             override fun onFinish() {
                 // Handle timer finish (timeout)
                 if (!gameJustRestarted) {
-                    previousResponses.add(Pair(true, "Hello, is anyone there?"))
+                    previousResponses.add(Pair(true, "Hello, is anyone there?")) // Add timeout response
 
                     // Notify the adapter about the new message
-                    responseAdapter.notifyItemInserted(previousResponses.size - 1)
+                    responseAdapter.notifyItemInserted(previousResponses.size - 1) // Update adapter
 
                     // Optionally scroll to the bottom of the RecyclerView to show the new message
-                    recyclerView.scrollToPosition(previousResponses.size - 1)
+                    recyclerView.scrollToPosition(previousResponses.size - 1)  // Scroll to the new message
                 }
                 // Reset the flag after the first step
                 gameJustRestarted = false
             }
-        }.start()
+        }.start() // Start the timer
     }
 
     private fun resetTimer() {
-        timer.cancel()
-        startTimer()
+        timer.cancel() // Cancel existing timer
+        startTimer() // Start a new timer
     }
 
-
+    // Show the current scenario dialogue
     private fun showScenario() {
         chosenEmergencyScenario?.let { scenario ->
-            if (currentStep < scenario.steps.size) {
-                val currentDialogue = scenario.steps[currentStep]
+            if (currentStep < scenario.steps.size) {  // Check if there are more steps
+                val currentDialogue = scenario.steps[currentStep] // Get current dialogue
 
                 // Add the current dialogue message to previous responses
                 previousResponses.add(Pair(true, currentDialogue.message))
-                responseAdapter.notifyItemInserted(previousResponses.size - 1)
+                responseAdapter.notifyItemInserted(previousResponses.size - 1) // Update adapter
                 recyclerView.post {
-                    recyclerView.scrollToPosition(previousResponses.size - 1)
+                    recyclerView.scrollToPosition(previousResponses.size - 1) // Scroll to the new message
                 }
 
                 // Check if this step uses text or image options
-                currentDialogue.textOptions?.let { textOptions ->
-                    if (textOptions.size >= 3) {
+                currentDialogue.textOptions?.let { textOptions -> // If there are text options
+                    if (textOptions.size >= 3) { // Ensure there are at least 3 options
                         // Set the options for the buttons (text options)
                         optionButton1.text = textOptions[0]
                         optionButton2.text = textOptions[1]
@@ -205,14 +210,14 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
                     } else {
                         showMessage("Error: Not enough text options provided.")
                     }
-                } ?: currentDialogue.imageOptions?.let { imageOptions ->
-                    if (imageOptions.size >= 3) {
+                } ?: currentDialogue.imageOptions?.let { imageOptions -> // If there are image option
+                    if (imageOptions.size >= 3) { // Ensure there are at least 3 options
                         // Set the options for the image buttons (image options)
-                        optionImage1.setImageResource(imageOptions[0])
-                        optionImage2.setImageResource(imageOptions[1])
-                        optionImage3.setImageResource(imageOptions[2])
+                        optionImage1.setImageResource(imageOptions[0]) // Set image for option 1
+                        optionImage2.setImageResource(imageOptions[1]) // Set image for option 2
+                        optionImage3.setImageResource(imageOptions[2]) // Set image for option 3
 
-                        // Ensure images are visible and buttons hidden
+                        // Ensure buttons are hidden and images are visible
                         setVisibilityForButtons(View.GONE)
                         setVisibilityForImages(View.VISIBLE)
                     } else {
@@ -253,8 +258,9 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     }
 
 
-
+    // Handle user's choice
     private fun handleChoice(choice: Int) {
+        // Prevents rapid clicks
         val currentTime = System.currentTimeMillis()
 
         // Check if the click interval is within the rapid click threshold
@@ -339,17 +345,16 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
 
     // Restart the chosen emergency scenario
     override fun onPlayAgain() {
-
         chosenEmergencyScenario?.let {
-            score = 0
-            wrongChoices = 0
-            currentStep = 0
+            score = 0 // Reset score
+            wrongChoices = 0 // Reset wrong choices
+            currentStep = 0 // Reset to the first step
             previousResponses.clear()  // Clear the conversation history
             responseAdapter.notifyDataSetChanged() // Notify adapter to reset the conversation
-            gameJustRestarted = true
+            gameJustRestarted = true // Flag that the game has restarted
             //showScenario()
-            resetTimer()
-            startGame(it)
+            resetTimer() // Reset timer
+            startGame(it) // Start the game again with the same scenario
         }
     }
 
@@ -359,12 +364,13 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
     }
 
 
+    // Handle end of game logic
     private fun endGame(success: Boolean) {
         chosenEmergencyScenario?.let { scenario ->
             val sharedPreferences = getSharedPreferences("GameProgress", Context.MODE_PRIVATE)
             val nickname = sharedPreferences.getString("nickname", "") ?: ""
             Log.d("retrieveNickname", "Nickname retrieved: $nickname")
-
+            // Handle success or failure of the game
             if (nickname.isNotEmpty()) {
                 if (success) {
                     gameProgressManager.markScenarioAsCompleted(nickname, scenario.scenarioName)
@@ -383,9 +389,5 @@ class GamePlay : AppCompatActivity(), FailedFragment.FailedFragmentListener {
             Log.d("endGame", "Scenario not selected")
         }
     }
-
-
-
-
 
 }
