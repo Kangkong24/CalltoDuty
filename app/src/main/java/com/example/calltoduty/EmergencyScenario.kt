@@ -196,7 +196,7 @@ val emergencyScenarios: List<EmergencyScenario> = listOf(
             Dialogue(
                 message = "",
                 imageOptions = listOf(R.drawable.ambulance_btn, R.drawable.firetruck_btn, R.drawable.endcall_btn),
-                correctOption = setOf(2) // The correct response is to send police to assess if it’s a prank, but with caution.
+                correctOption = setOf(2)
             )
         )
     ),

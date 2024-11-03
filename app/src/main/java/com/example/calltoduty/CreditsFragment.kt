@@ -28,7 +28,6 @@ class CreditsFragment : DialogFragment() {
             dismiss() // Dismiss the popup
         }
 
-        // Add your credits logic here
     }
 
     companion object {
